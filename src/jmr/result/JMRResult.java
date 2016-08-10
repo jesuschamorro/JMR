@@ -1,15 +1,11 @@
 package jmr.result;
 
 /**
- * <p>Title: JMR Project</p>
- * <p>Description: Java Multimedia Retrieval API</p>
- * <p>Copyright: Copyright (c) 2008</p>
- * <p>Company: University of Granada</p>
- * @author Jesus Chamorro Martinez
- * @version 1.0
+ * Class representing an abstract result obtained in some way using the JMR.
+ * 
+ * @author Jesús Chamorro Martínez (jesus@decsai.ugr.es)
  */
-
-public interface JMRResult {
+public interface JMRResult extends Comparable<JMRResult> {
 
   /**
    * Represents an undefined result type
@@ -35,7 +31,11 @@ public interface JMRResult {
    * Represents a integer result
    */
   public static final int TYPE_INTEGER = 3;
-
+  
+  /**
+   * Represents a a point in a n-dimesnional vector space
+   */
+  public static final int TYPE_VECTOR = 4;
 
   /** Return the result type
      * @see #TYPE_UNDEFINED
@@ -43,6 +43,7 @@ public interface JMRResult {
      * @see #TYPE_FLOAT
      * @see #TYPE_DOUBLE
      * @see #TYPE_INTEGER
+     * @see #TYPE_VECTOR
      * @return The result type
      */
   public int getType();
@@ -73,4 +74,23 @@ public interface JMRResult {
     * @return A integer number representing the result
     */
   public int toInteger();
+  
+    /**
+     * Compares this result object with the specified object for order. Returns
+     * a negative integer, zero, or a positive integer as this object is less
+     * than, equal to, or greater than the specified object.
+     * 
+     * The default implementation is based on the double representation of the
+     * <code>JMRResult</code> objects.
+     *
+     * @param result the objtect to be compared
+     * @return a negative integer, zero, or a positive integer as this object is 
+     * less than, equal to, or greater than the specified object.
+     */
+    @Override
+    default public int compareTo(JMRResult result) {
+        Double r1 = this.toDouble();
+        Double r2 = result.toDouble();
+        return r1.compareTo(r2);
+    }
 }

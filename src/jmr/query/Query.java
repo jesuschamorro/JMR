@@ -1,18 +1,27 @@
 package jmr.query;
 
 /**
- * <p>Title: VisualPanel</p>
- *
- * <p>Description: Visual Panel for JMR</p>
- *
- * <p>Copyright: Copyright (c) 2007</p>
- *
- * <p>Company: </p>
- *
- * @author not attributable
- * @version 1.0
+ * Class representing a query of type <code>T</code>
+ * 
+ * @author Jesús Chamorro Martínez (jesus@decsai.ugr.es)
+ * @param <T> type of the query
  */
-public class Query {
-    public Query() {
+public class Query<T> {
+    protected T query;
+    
+    public Query(T query){
+        this.query = query;
+    }
+    
+    public void setQuery(T query){
+        this.query = query;
+    }
+    
+    public T getQuery(){
+        return query;
+    }
+    
+    public Class queryClass(){
+        return query==null?null:query.getClass();
     }
 }

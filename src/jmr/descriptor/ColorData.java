@@ -1,34 +1,43 @@
 package jmr.descriptor;
 
-import jmr.media.Media;
+
+import jmr.initial.media.Media;
 import jmr.result.JMRResult;
 import jmr.result.FloatResult;
 import java.awt.Color;
-import java.awt.color.ColorSpace;
+import java.security.InvalidParameterException;
+
 
 /**
- * <p>Title: JMR Project</p>
- * <p>Description: Java Multimedia Retrieval API</p>
- * <p>Copyright: Copyright (c) 2008</p>
- * <p>Company: University of Granada</p>
- * @author Jesus Chamorro Martinez
- * @version 1.0
+ *
+ *
+ * @author Jesús Chamorro Martínez (jesus@decsai.ugr.es)
  */
+/*
+   Nota sobre versión de Soto: consideraba otro tipo de distancias además de
+   la euclídea, y consideraba casos segun espacio. Realmente esto tendría que
+   trasladarse a la clase que represente el color, no tanto a un descriptor.
+*/
+public class ColorData extends MediaDescriptor {
 
-public class ColorData extends ColorDescriptor {
-
-  /** The color stores by this ColorData */
+  /** The color of this descriptor */
   protected Color colorData;
 
   /**
      * Constructs a <code>ColorData</code> from a color.
      * @param color  The data color
      */
-  public ColorData(Color color) {
-    super(MediaDescriptor.TYPE_COLOR_DATA_DESCRIPTOR,color.getColorSpace().getType());
+  public ColorData(Color color) { 
     colorData = color;
   }
 
+  
+  public ColorData(Media media) {
+    //TODO  
+    colorData = null;
+  }
+  
+  
   /** Return the color associated to this ColorData object
    * @return The color data
    */
@@ -37,7 +46,7 @@ public class ColorData extends ColorDescriptor {
   }
 
   /** Set the color associated to this ColorData object
-   * @param Color to be set
+     * @param color
    */
   public void setColor(Color color) {
     colorData = color;
@@ -45,20 +54,27 @@ public class ColorData extends ColorDescriptor {
 
 
   /** Calculates the Euclidean distance between colors
-   * @param c1 Fisrt color
-   * @param c2 Second color
+   * @param c1 fisrt color
+   * @param c2 second color
+   * @param normalize if <code>true</code>, the distance is normalized between
+   * 0 and 1
    * @return A float value corresponding to the euclidean distance between colors
    */
-  private float distance(Color c1, Color c2) {
+  private float distance(Color c1, Color c2, boolean normalize) {
+    if(c1.getColorSpace().getType() != c2.getColorSpace().getType())  {       
+        throw new InvalidParameterException("Colors must be in the same color space.");
+    }
+        
     double dist = 0.0, dc;
-
-    float c1Components[] = c1.getColorComponents(null);
+    float c1Components[] = c1.getColorComponents(null); // In [0,1]
     float c2Components[] = c2.getColorComponents(null);
-    for (int i = 0; i < c1Components.length; i++) {
+    for (int i = 0; i < c1Components.length; i++) {      
       dc = c1Components[i] - c2Components[i];
       dist += (dc * dc);
     }
-    dist = Math.sqrt(dist);
+    dist = Math.sqrt(dist);  //Components are between 0 and 1, so the euclidean
+    if(normalize)            //distance is between 0 and sqrt(num_componets)
+        dist/=Math.sqrt(c1Components.length); 
     return ( (float) dist);
   }
 
@@ -67,7 +83,7 @@ public class ColorData extends ColorDescriptor {
    * @return A float result corresponding to the distance between colors
    */
   public FloatResult compare(ColorData color) {
-    float distance = distance(color.colorData, this.colorData);
+    float distance = distance(color.colorData, this.colorData,true);
     return ( new FloatResult(distance) );
   }
 
@@ -77,6 +93,7 @@ public class ColorData extends ColorDescriptor {
    * @see #compare(ColorData color)
    * @return The difference between descriptors
    */
+  @Override
   public JMRResult compare(MediaDescriptor mediaDescriptor) {
     // Only ColorData objects can be compared
     if (! (mediaDescriptor instanceof ColorData)) {
@@ -84,24 +101,5 @@ public class ColorData extends ColorDescriptor {
     }
     return ( compare((ColorData) mediaDescriptor) );
   }
-
-  /** Create a new ColorData object from a given media
-   * @param media MediaDescriptor object from which the ColoData is calculated
-   * @see #compare(ColorData color)
-   * @return A ColorData descriptor
-   */
-  public void calculate(Media media) {
-    //TODO
-  }
-
-
-  public boolean equals(Object obj){
-      return( colorData.equals(((ColorData)obj).colorData) );
-  }
-
-  public int hashCode(){
-      return colorData.hashCode();
-  }
-
 
 }

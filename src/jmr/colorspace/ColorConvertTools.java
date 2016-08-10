@@ -3,32 +3,36 @@
  */
 package jmr.colorspace;
 
+import java.awt.Color;
 import java.awt.color.ColorSpace;
 import java.awt.color.ICC_ColorSpace;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
-import jmr.colorspace.*;
-import jmr.media.JMRExtendedBufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import jmr.descriptor.ColorData;
+import jmr.initial.media.JMRBufferedImage;
+import jmr.initial.media.JMRExtendedBufferedImage;
 
 
 /**
- * This class implement the method for color convertion using {@link ImageJMR} and
+ * This class implement the method for color conversion using {@link ImageJMR} and
  * {@link ColorSpaceJMR} classes.
  *
  *
  *
  *
- * @author  RAT Benoit <br/>
- * (<a href="http://ivrg.epfl.ch" target="about_blank">IVRG-LCAV-EPFL</a> &
- *  <a href="http://decsai.ugr.es/vip" target="about_blank">VIP-DECSAI-UGR</a>)
+ * @author  SoTiLLo
  * @version 1.0
- * @since 5 dec. 07
- *
  */
 public class ColorConvertTools {
-
 
 
 	/** This tools is designed to replace ColorConvertOp that process too many operation
@@ -51,39 +55,140 @@ public class ColorConvertTools {
 	public static JMRExtendedBufferedImage colorConvertOp(BufferedImage src, ColorSpace dstCs) {
 
 
-		//Create destination following the colorSpace.
-		JMRExtendedBufferedImage dst = null;
-		if(dstCs.getType() == ColorSpaceJMR.CS_HMMD) {
-			dst = JMRExtendedBufferedImage.getInstance(src.getWidth(),src.getHeight(),
-					JMRExtendedBufferedImage.TYPE_JMR_4F_INTERLEAVED, dstCs);
-		}
-		else {
-			dst = JMRExtendedBufferedImage.getInstance(src.getWidth(),src.getHeight(),
-					JMRExtendedBufferedImage.TYPE_JMR_3F_INTERLEAVED, dstCs);
-		}
+          //Create destination following the colorSpace.
+          JMRExtendedBufferedImage dst = null;
+          
+          if(dstCs.getType() == src.getColorModel().getColorSpace().getType())
+        	  return new JMRExtendedBufferedImage(src);
+          
+          if (dstCs.getType() == ColorSpaceJMR.CS_HMMD) {
+            dst = JMRExtendedBufferedImage.getInstance(src.getWidth(), src.getHeight(),
+                                                       JMRExtendedBufferedImage.
+                                                       TYPE_JMR_4F_INTERLEAVED, dstCs);
+          }
+          else {
+            dst = JMRExtendedBufferedImage.getInstance(src.getWidth(), src.getHeight(),
+                                                       JMRExtendedBufferedImage.
+                                                       TYPE_JMR_3F_INTERLEAVED, dstCs);
+          }
 
-		//Check that source is not Gray nor Custom
-		if(src.getType() != BufferedImage.TYPE_CUSTOM) {
+          WritableRaster dstMx = dst.getRaster();
 
-			WritableRaster dstMx = dst.getRaster();
-			//ColorSpace dstCs = dst.getColorModel().getColorSpace();
-			int RGB;
-			float[] p_in = new float[3];
-			float[] p_out = new float[dstMx.getNumBands()];
-			for(int x=0;x<src.getWidth();x++) {
-				for(int y=0;y<src.getHeight();y++) {
-					RGB = src.getRGB(x,y);
-					p_in[0] = (float)((RGB >> 16) & 0xFF)/255.0f;
-					p_in[1] = (float)((RGB >> 8) & 0xFF)/255.0f;
-					p_in[2] = (float)(RGB & 0xFF)/255.0f;
-					p_out = dstCs.fromRGB(p_in);
-					dstMx.setPixel(x,y,p_out);
-				}
-			}
-		}
+          //Check that source is not Gray nor Custom
+          if (src.getType() != BufferedImage.TYPE_CUSTOM) {
+            //ColorSpace dstCs = dst.getColorModel().getColorSpace();
+            int RGB;
+            float[] p_in = new float[3];
+            float[] p_out = new float[dstMx.getNumBands()];
+            //float[] p_prueba = new float[3];
+            for (int x = 0; x < src.getWidth(); x++) {
+              for (int y = 0; y < src.getHeight(); y++) {
+                RGB = src.getRGB(x, y);
+                p_in[0] = (float) ( (RGB >> 16) & 0xFF) / 255.0f;
+                p_in[1] = (float) ( (RGB >> 8) & 0xFF) / 255.0f;
+                p_in[2] = (float) (RGB & 0xFF) / 255.0f;
+                p_out = dstCs.fromRGB(p_in);
+                dstMx.setPixel(x, y, p_out);
+                //p_prueba = dstCs.toRGB(p_out);
+              }
+            }
+          }
 
-		return dst;
-	}
+          /*PARA PROBAR CONVERSIONES*/
+          /*BufferedImage image = new BufferedImage(src.getWidth(), src.getHeight(),
+                                                  BufferedImage.TYPE_INT_RGB);
+
+          WritableRaster raster = image.getRaster();
+
+          float[] p_in = new float[dstCs.getNumComponents()];
+          float[] p_out = new float[raster.getNumBands()];
+          for (int x = 0; x < image.getWidth(); x++) {
+            for (int y = 0; y < image.getHeight(); y++) {
+              //RGB = src.getRGB(x, y);
+              dstMx.getPixel(x,y,p_in);
+              //p_in[0] = (float) ( (RGB >> 16) & 0xFF) / 255.0f;
+              //p_in[1] = (float) ( (RGB >> 8) & 0xFF) / 255.0f;
+              //p_in[2] = (float) (RGB & 0xFF) / 255.0f;
+              p_out = dstCs.toRGB(p_in);
+              p_out[0]*=255.0f;
+              p_out[1]*=255.0f;
+              p_out[2]*=255.0f;
+              raster.setPixel(x, y, p_out);
+
+              for(int i=0; i<p_in.length;i++)
+                p_in[i] = ColorConvertTools.domainTransform(p_in[i], dstCs.getMinValue(i), dstCs.getMaxValue(i), 0.0f,1.0f);
+              Color col = new Color(dstCs,p_in,1.0f);
+              float c1Components[] = null;
+              c1Components = col.getColorComponents(null);
+              c1Components.toString();
+            }
+          }
+
+          image.setData(raster);
+
+          File file = new File(".//transformation"+ColorSpaceJMR.getColorSpaceName(dstCs.getType())+".png");
+          try {
+            ImageIO.write(image, "png", file);
+          }
+          catch (Exception e) {
+            System.out.println(e.getMessage());
+          }*/
+
+          return dst;
+        }
+
+        /**
+         * A domain transform function. Transform a value in [a,b] domain to [c,d] domain
+         *
+         * <p>The transform applied is:
+         *    ((x-a)/(b-a))*(d-c) + c   where [a,b], [c,d] and a<b ; c<d
+         * </p>
+         *
+         * @param x value belongs to [a,b] interval
+         * @param a min value of [a,b]
+         * @param b max value of [a,b]
+         * @param c min value of [c,d]
+         * @param d max value of [c,d]
+         * @return transformed value
+         */
+
+        public static float domainTransform(float x, float a, float b, float c, float d){
+          return ((((x-a)/(b-a))*(d-c)) + c);
+        }
+        
+        /**
+         * 
+         * @param x An array
+         * @param a min value of [a,b]
+         * @param b max value of [a,b]
+         * @param c min value of [c,d]
+         * @param d max value of [c,d]
+         * @return A transformed Domain array
+         */
+        public static float[] domainTransform(float[] x, ColorSpace cs, float c, float d ){
+        	float pixelQ[] = new float[x.length];
+        	for (int i = 0; i < pixelQ.length; i++)
+				pixelQ[i] = domainTransform(x[i], cs.getMinValue(i), cs.getMaxValue(i), c, d);
+            return pixelQ;
+          }
+
+        public static float[] domainTransform(float[] x, ColorSpace cs1, ColorSpace cs2 ){
+        	float pixelQ[] = new float[x.length];
+        	float c,d;
+        	for (int i = 0; i < pixelQ.length; i++){
+        		c = cs1.getMinValue(i);
+        		d= cs1.getMaxValue(i);
+				pixelQ[i] = domainTransform(pixelQ[i], c, d, cs2.getMinValue(i), cs2.getMaxValue(i));
+        	}
+            return pixelQ;
+          }
+        
+        public static float[] domainTransform(float[] x, float c, float d, ColorSpace cs ){
+        	float pixelQ[] = new float[x.length];
+        	for (int i = 0; i < pixelQ.length; i++)
+				pixelQ[i] = domainTransform(pixelQ[i], c, d, cs.getMinValue(i), cs.getMaxValue(i));
+            return pixelQ;
+          }
 
 
 	/**
@@ -110,8 +215,8 @@ public class ColorConvertTools {
 		case ColorSpaceJMR.CS_LINEAR_RGB:
 		case ColorSpaceJMR.CS_PYCC:
 		case ColorSpaceJMR.CS_sRGB:
-			op = new ColorConvertOp(ColorSpace.getInstance(colorSpaceType),null);
-			return new JMRExtendedBufferedImage(op.filter(src,null));
+			//op = new ColorConvertOp(ColorSpace.getInstance(colorSpaceType),null);
+			//return new JMRExtendedBufferedImage(op.filter(src,null));
 //		case ColorSpaceJMR.CS_HSI:
 //			 cS = ColorSpaceHSI.getInstance();
 //			 //dst = op.createCompatibleDestImage(src,new ComponentColorModel(cS, false,false,Transparency.BITMASK,DataBuffer.TYPE_BYTE));
@@ -125,6 +230,7 @@ public class ColorConvertTools {
 		case ColorSpaceJMR.CS_HMMD:
 		case ColorSpaceJMR.CS_Lab:
 		case ColorSpaceJMR.CS_Luv:
+		case ColorSpaceJMR.CS_RGB:
 			cS = ColorSpaceJMR.getInstance(colorSpaceType);
 			dst = colorConvertOp(src,cS);
 			break;
@@ -132,7 +238,7 @@ public class ColorConvertTools {
 			System.err.println("No transformation find for this color space");
 			return null;
 		}
-		System.out.println(dst.toString());
+		//System.out.println(dst.toString());
 		return dst;
 	}
 
@@ -236,4 +342,44 @@ public class ColorConvertTools {
 		}
 		return pixelarray;
 	}
+	
+	public static ColorData getColorData(int RGB, ColorSpace cs){
+		float[] p_in = new float[3];
+		//RGB = -724354;
+        float[] p_out = new float[cs.getNumComponents()];
+        p_in[0] = (float) ( (RGB >> 16) & 0xFF) / 255.0f;
+        p_in[1] = (float) ( (RGB >> 8) & 0xFF) / 255.0f;
+        p_in[2] = (float) (RGB & 0xFF) / 255.0f;
+        p_out = cs.fromRGB(p_in);
+        
+        for(int i=0; i<p_out.length;i++)
+            p_out[i] = ColorConvertTools.domainTransform(p_out[i], cs.getMinValue(i), cs.getMaxValue(i), 0.0f,1.0f);
+        
+        Color c = new Color(cs, p_out, 1.0f);        
+                
+        return (new ColorData(c));
+	}
+	
+	public static JMRExtendedBufferedImage scaleImage(BufferedImage imgSource, float scaleFactor){
+		AffineTransform at = AffineTransform.getScaleInstance(scaleFactor,scaleFactor);
+		AffineTransformOp atop = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+		BufferedImage imgdest = atop.filter( imgSource, null);
+		
+		return new JMRExtendedBufferedImage(imgdest);
+	}
+	
+	 public static void saveImage(File f, BufferedImage img){
+	    	String image = f.getAbsolutePath();
+	    	if(!image.endsWith(".jpg"))
+				image += ".jpg";
+			
+	    	if(img!=null){
+		    	try {
+		   			ImageIO.write(img, "png", new File(image));
+		   		}
+		   		catch (IOException io) {
+		    		System.err.println(io.getMessage());
+		    	}
+	    	}
+	    }
 }

@@ -14,11 +14,8 @@ package jmr.colorspace;
  *  and the 10 degree field of view {@link #WP_CIE1964}.
  *  <p/>
  *
- * @author  RAT Benoit <br/>
- * (<a href="http://ivrg.epfl.ch" target="about_blank">IVRG-LCAV-EPFL</a> &
- *  <a href="http://decsai.ugr.es/vip" target="about_blank">VIP-DECSAI-UGR</a>)
+ * @author  SoTiLLo
  * @version 1.0
- * @since 29 nov. 07
  *
  * @see <a href="http://en.wikipedia.org/wiki/White_point#White_points_for_some_illuminants">Wikipedia</a>
  *

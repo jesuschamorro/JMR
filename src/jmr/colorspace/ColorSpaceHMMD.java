@@ -3,6 +3,8 @@
  */
 package jmr.colorspace;
 
+import java.awt.Color;
+
 /**
  * The HMMD (<i>H</i>ue,<i>M</i>ax,<i>M</i>in,<i>D</i>iff) Color Space used by MPEG7 Standard.
  *
@@ -30,10 +32,7 @@ package jmr.colorspace;
  *  is not implemented.
  * </p>
  *
- * @author  	RAT Benoit
- * @author 		<a href="http://ivrg.epfl.ch" target="about_blank">IVRG-LCAV-EPFL</a> &
- *  <a href="http://decsai.ugr.es/vip" target="about_blank">VIP-DECSAI-UGR</a>
- * @since 		1.0,	25 nov. 07
+ * @author  	SoTiLLo
  *
  * */
 public class ColorSpaceHMMD extends ColorSpaceJMR {
@@ -92,6 +91,7 @@ public class ColorSpaceHMMD extends ColorSpaceJMR {
 		else if (b == max)
 			hue = (float) (60*(4.+(r-g)/(max-min)));
 
+                // set hue
 
 		hmmdVec[0] = hue;
 		hmmdVec[1] = max;
@@ -109,7 +109,7 @@ public class ColorSpaceHMMD extends ColorSpaceJMR {
 	 *
 	 *  <p style="color:red">This function is not correctly implemented and use strictly the HSI->RGB convertion</p>
 	 *
-	 * @param	hmmdVec	a float vector (length=3) with hsv values normalized H=[0,260] and Max,Min,Diff=[0,1]
+	 * @param	hmmdVec	a float vector (length=3) with hsv values normalized H=[0,360] and Max,Min,Diff=[0,1]
 	 * @return 			a float vector (length=3) with rgb values normalized R,G,B=[0,1]
 	 * @see <a href="http://java.sun.com/products/java-media/jai/forDevelopers/jai-apidocs/javax/media/jai/IHSColorSpace.html">
 	 * javax.media.jai.IHSColorSpace</a>
@@ -195,5 +195,14 @@ public class ColorSpaceHMMD extends ColorSpaceJMR {
 			return super.getName(cmp);
 		}
 	}
+
+  public int chromaticZone(Color col) {
+    //TODO
+    return ColorSpaceJMR.CHROMATIC_ZONE;
+  }
+
+  public float[] chromaticDegree(Color col) {
+    return null;
+  }
 
 }

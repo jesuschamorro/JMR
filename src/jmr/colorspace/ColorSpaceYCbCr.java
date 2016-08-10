@@ -3,6 +3,7 @@
  */
 package jmr.colorspace;
 
+import java.awt.Color;
 
 /**
  * YCbCr or Y'CbCr is a family of opponent color spaces mainly used in video systems.
@@ -18,9 +19,7 @@ package jmr.colorspace;
  * </p>
  *
  *
- * @author  RAT Benoit <br/>
- * (<a href="http://ivrg.epfl.ch" target="about_blank">IVRG-LCAV-EPFL</a> &
- *  <a href="http://decsai.ugr.es/vip" target="about_blank">VIP-DECSAI-UGR</a>)
+ * @author SoTiLLo
  * @version 1.0
  * @since 29 nov. 07
  *
@@ -92,7 +91,7 @@ public class ColorSpaceYCbCr extends ColorSpaceJMR {
 	/**
 	 * transform a YCrCb pixel to a RGB pixel.
 	 *
-	 * @param 	ybrVec	a vector (length=3) with hsv values normalized Y,Cr,Cb=[0,1]
+	 * @param 	ybrVec	a vector (length=3) with YCbCr values normalized  Y in [0; 1] & Cb,Cr [-0.5; 0.5]
 	 * @return 			a vector (length=3) with rgb values normalized R,G,B=[0,1]
 	 *
 	 * @see <a href="http://www.f4.fhtw-berlin.de/~barthel/ImageJ/ColorInspector">ColorInspector 3D v2.0</a>
@@ -155,4 +154,13 @@ public class ColorSpaceYCbCr extends ColorSpaceJMR {
 			return super.getName(cmp);
 		}
 	}
+
+  public int chromaticZone(Color col) {
+    //TODO
+    return ColorSpaceJMR.CHROMATIC_ZONE;
+  }
+
+  public float[] chromaticDegree(Color col) {
+    return null;
+  }
 }

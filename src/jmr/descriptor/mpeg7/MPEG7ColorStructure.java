@@ -1,12 +1,13 @@
 package jmr.descriptor.mpeg7;
 
 import java.awt.image.Raster;
-import jmr.media.JMRExtendedBufferedImage;
-import jmr.colorspace.ColorSpaceJMR;
+import jmr.descriptor.ColorDescriptor;
+import jmr.initial.media.JMRExtendedBufferedImage;
+import jmr.initial.colorspace.ColorSpaceJMR;
 import jmr.descriptor.MediaDescriptor;
 import jmr.result.JMRResult;
 import jmr.result.FloatResult;
-import jmr.media.Media;
+import jmr.initial.media.Media;
 
 /**
  * Color Structure Descriptor from MPEG7 standard.
@@ -44,7 +45,7 @@ import jmr.media.Media;
  * @since 23 nov. 07
  *
  */
-public class MPEG7ColorStructure extends MPEG7ColorDescriptor {
+public class MPEG7ColorStructure extends ColorDescriptor {
 
   /**  Quantization Level of the HMMD ColorSpace   */
   protected int qLevels = 256;
@@ -82,7 +83,7 @@ public class MPEG7ColorStructure extends MPEG7ColorDescriptor {
    *  @param qLevels Number of quantization levels
    */
   public MPEG7ColorStructure(int qLevels) {
-    super(MediaDescriptor.TYPE_MPEG7_CSD_DESCRIPTOR, ColorSpaceJMR.CS_HMMD);
+    super(ColorSpaceJMR.CS_HMMD);
     init(qLevels);
   }
 

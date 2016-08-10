@@ -3,6 +3,7 @@
  */
 package jmr.colorspace;
 
+import java.awt.Color;
 
 /**
  * L*,a*,b* or CIELAB Color Space is an approximate perceptually uniform space.
@@ -21,11 +22,8 @@ package jmr.colorspace;
  * </p>
  *
  *
- * @author  RAT Benoit <br/>
- * (<a href="http://ivrg.epfl.ch" target="about_blank">IVRG-LCAV-EPFL</a> &
- *  <a href="http://decsai.ugr.es/vip" target="about_blank">VIP-DECSAI-UGR</a>)
+ * @author  SoTiLLo
  * @version 1.0
- * @since 29 nov. 07
  * @see <a href="http://www.couleur.org/index.php?page=transformations">www.couleur.org</a>
  */
 public class ColorSpaceLab extends ColorSpaceJMR {
@@ -36,9 +34,12 @@ public class ColorSpaceLab extends ColorSpaceJMR {
 
 
 	private WhitePoint wP;
-	private float epsi = 216.f/24389.f;
-	private float kappa = 24389.f/(116.f*27.f);
+	//private float epsi = 216.f/24389.f;
+	//private float kappa = 24389.f/(116.f*27.f);
 	private float frac16116 = 16.f/116.f;
+        private float delta = 6.0f/29.f;
+        private float epsi = delta*delta*delta;
+        private float kappa = 1.0f/(3*delta*delta);
 
 	 /**
      * Constructs an instance of this class with <code>type</code>
@@ -92,19 +93,22 @@ public class ColorSpaceLab extends ColorSpaceJMR {
 	/**
 	 * Transform a CIELAB pixel in XYZ then in RGB pixel.
 	 *
-	 * @param 	labVec	a vector (length=3) with lab values L*=[0,100],a*=[-500,500],b*=[-200,200]
+	 * @param 	labVec	a vector (length=3) with lab values in [0,1]
+         * L*=[0,100],a*=[-500,500],b*=[-200,200]
 	 * @return 			a vector (length=3) with rgb values normalized R,G,B=[0,1]
 	 * @see <i>The Color Image Processing Book, Sangwine 1998</i>
 	 */
 	public float[] toRGB(float[] labVec) {
-		float[] xyzVec = toCIEXYZ(labVec);
-		float [] rgbVec =  new float[3];
+          for (int i = 0; i < labVec.length; i++)
+            labVec[i] = ColorConvertTools.domainTransform(labVec[i], 0.0f, 1.0f, getMinValue(i),
+                                                          getMaxValue(i));
+          float[] xyzVec = toCIEXYZ(labVec);
+          float[] rgbVec = new float[3];
 
-		XYZ2RGB(xyzVec,rgbVec);
+          XYZ2RGB(xyzVec, rgbVec);
 
-		return rgbVec;
-
-	}
+          return rgbVec;
+        }
 
 	/**
 	 * Transform a XYZ pixel in Lab pixel.
@@ -156,6 +160,21 @@ public class ColorSpaceLab extends ColorSpaceJMR {
 	 */
 	public float[] toCIEXYZ(float[] labVec) {
 		float[] xyzVec = {0f,0f,0f}; //TODO Transformation not implemented
+                float l,a,b;
+                float fx,fy,fz;
+                float[] XYZn = wP.getXYZ();
+
+                l = labVec[0];
+                a = labVec[1];
+                b = labVec[2];
+                fy = (l+16.0f)/116.0f;
+                fx = fy + (a/500.0f);
+                fz = fy - (b/200.0f);
+
+                //val = (condition)? val_true : val_false
+                xyzVec[1] = (fy>delta)? (XYZn[1]*fy*fy*fy) : ((fy-frac16116)*3*delta*delta*XYZn[1]);
+                xyzVec[0] = (fx>delta)? (XYZn[0]*fx*fx*fx) : ((fx-frac16116)*3*delta*delta*XYZn[0]);
+                xyzVec[2] = (fz>delta)? (XYZn[2]*fz*fz*fz) : ((fz-frac16116)*3*delta*delta*XYZn[2]);
 
 		return xyzVec;
 	}
@@ -204,4 +223,13 @@ public class ColorSpaceLab extends ColorSpaceJMR {
 		str+="/ espilon="+epsi+"; kappa="+kappa;
 		return str;
 	}
+
+  public int chromaticZone(Color col) {
+    //TODO
+    return ColorSpaceJMR.CHROMATIC_ZONE;
+  }
+
+  public float[] chromaticDegree(Color col) {
+    return null;
+  }
 }

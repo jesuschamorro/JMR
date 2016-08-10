@@ -3,6 +3,7 @@
  */
 package jmr.colorspace;
 
+import java.awt.Color;
 
 /**
  * L*,u*,v* or CIELUV Color Space is an approximate perceptually uniform space.
@@ -19,11 +20,8 @@ package jmr.colorspace;
  * </p>
  *
  *
- * @author  RAT Benoit <br/>
- * (<a href="http://ivrg.epfl.ch" target="about_blank">IVRG-LCAV-EPFL</a> &
- *  <a href="http://decsai.ugr.es/vip" target="about_blank">VIP-DECSAI-UGR</a>)
+ * @author  SoTiLLo
  * @version 1.0
- * @since 29 nov. 07
  * @see <a href="http://www.couleur.org/index.php?page=transformations">www.couleur.org</a>
  *
  */
@@ -111,9 +109,10 @@ public class ColorSpaceLuv extends ColorSpaceJMR {
 
 		float[] luvVec = new float[3];
 		float u, v, u_, v_;
+                double threshold = Math.pow(6.0f/29.0f,3.0f);
 
 		float yr = wP.normYVal(xyzVec[1]); //Y Normalized by the WhitePoint for computing the L*
-		float L = 116f*func(yr)-16; //Obtain the luminance like in CIELAB
+		float L = (yr > (float)threshold)? 116f*(float)Math.pow(yr,1.0f/3.0f)-16 : (float)Math.pow(29.0f/3.0f,3f)*yr; //Obtain the luminance like in CIELAB
 
 		//pure XYZ value to uv_
 		u_ = XYZ2u_(xyzVec);
@@ -136,7 +135,7 @@ public class ColorSpaceLuv extends ColorSpaceJMR {
 	}
 
 	private float XYZ2v_(float[] XYZ) {
-		return 9f*XYZ[0]/(XYZ[0] + 15*XYZ[1] + 3*XYZ[2]); //v_ = 9*Y / (X + 15*Y + 3*Z
+		return 9f*XYZ[0]/(XYZ[0] + 15*XYZ[1] + 3*XYZ[2]); //v_ = 9*Y / (X + 15*Y + 3*Z)
 	}
 
 
@@ -174,6 +173,20 @@ public class ColorSpaceLuv extends ColorSpaceJMR {
 	 */
 	public float[] toCIEXYZ(float[] luvVec) {
 		float[] xyzVec = {0f,0f,0f}; //TODO Transformation not implemented
+                float l,u,v;
+                float u_,v_;
+                float[] XYZn = wP.getXYZ();
+
+                l = luvVec[0];
+                u = luvVec[1];
+                v = luvVec[2];
+                u_ = (u/(13.0f*l))+ ur_;
+                v_ = (v/(13.0f*l))+ vr_;
+
+                xyzVec[1] = (l>8)? XYZn[1]*(float)Math.pow(((l+16.0f)/116.0f),3.0f) : XYZn[1]*l*(float)Math.pow(3.0f/29.0f,3f);
+                xyzVec[0] =(-9.0f*xyzVec[1]*u_)/(((u_-4.0f)*v_)-(u_*v_));
+                xyzVec[2] =((9*xyzVec[1])-(15.0f*v_*xyzVec[1])-(v_*xyzVec[0]))/(3*v_);
+
 		return xyzVec;
 	}
 
@@ -238,4 +251,13 @@ public class ColorSpaceLuv extends ColorSpaceJMR {
 		str+="/ espilon="+epsi+"; kappa="+kappa;
 		return str;
 	}
+
+  public int chromaticZone(Color col) {
+    //TODO
+    return ColorSpaceJMR.CHROMATIC_ZONE;
+  }
+
+  public float[] chromaticDegree(Color col) {
+    return null;
+  }
 }
