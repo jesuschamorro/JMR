@@ -6,8 +6,9 @@ import java.util.LinkedList;
  * A list of <code>JMRResult</code> object.
  * 
  * @author Jesús Chamorro Martínez (jesus@decsai.ugr.es)
+ * @param <T>
  */
-public class ResultList extends LinkedList<JMRResult>{
+public class ResultList<T extends JMRResult> extends LinkedList<T>{
     /**
      * Sorts this list into ascending order.
      */

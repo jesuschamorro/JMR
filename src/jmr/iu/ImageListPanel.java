@@ -2,7 +2,9 @@ package jmr.iu;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.util.List;
 import javax.swing.JPanel;
+import jmr.result.JMRResult;
 import jmr.result.ResultList;
 import jmr.result.ResultMetadata;
 
@@ -29,7 +31,7 @@ public class ImageListPanel extends javax.swing.JPanel {
      * 
      * @param list list of result objetcs 
      */
-    public ImageListPanel(ResultList list) {
+    public ImageListPanel(List< ResultMetadata<BufferedImage> > list) {
         this(); 
         if (list!=null) add(list);
     }
@@ -38,12 +40,10 @@ public class ImageListPanel extends javax.swing.JPanel {
      * 
      * @param list list of result objetcs 
      */
-    public void add(ResultList list) {
-        //Comprobar tipo de los elementos
-        for (Object o : list) {
-            ResultMetadata r = (ResultMetadata)o;            
+    public void add(List< ResultMetadata<BufferedImage> > list) {  
+        for (ResultMetadata<BufferedImage> r : list) {
             String label =  r.getResult().toString(); 
-            this.add((BufferedImage)r.getMetadata(), label);           
+            this.add(r.getMetadata(), label);           
         }
     }
     

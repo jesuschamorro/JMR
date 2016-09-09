@@ -17,7 +17,7 @@ import jmr.initial.media.JMRExtendedBufferedImage;
  * @version 1.0
  */
 
-public class MPEG7ColorStructureSQL extends MPEG7ColorStructure implements Descriptor2MySQL {
+public class MPEG7ColorStructureSQL extends jmr.descriptor.mpeg7.MPEG7ColorStructure implements Descriptor2MySQL {
 
   /**
    * Version of the descriptor:

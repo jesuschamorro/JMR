@@ -1,6 +1,6 @@
 package jmr.initial.descriptor;
 
-import jmr.initial.descriptor.mpeg7.MPEG7ColorStructure;
+import jmr.descriptor.mpeg7.MPEG7ColorStructure;
 import jmr.initial.descriptor.mpeg7.MPEG7ScalableColor;
 import jmr.initial.descriptor.mpeg7.MPEG7HomogeneousTexture;
 import jmr.initial.descriptor.mpeg7.MPEG7EdgeHistogram;
