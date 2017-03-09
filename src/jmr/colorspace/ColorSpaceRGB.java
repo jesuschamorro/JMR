@@ -16,8 +16,6 @@ import java.awt.Color;
  * semantic color meaning.
  * </p>
  * 
- * <img src="http://www.couleur.org/spaces/HSVPolspace.jpg"/>
- * 
  * 
  * @author SoTiLLo
  * @version 1.0
@@ -27,8 +25,6 @@ import java.awt.Color;
 public class ColorSpaceRGB extends ColorSpaceJMR {
 
 	/**
-	 * @param type
-	 * @param numCmp
 	 */
 	protected ColorSpaceRGB() {
 		super(ColorSpaceJMR.CS_RGB, 3);
@@ -43,7 +39,6 @@ public class ColorSpaceRGB extends ColorSpaceJMR {
 	/**
 	 *  Transforms a color value assumed to be in the default CS_sRGB color space into this ColorSpace.
 	 * 
-	 * @param rgbVec a vector (length=3) with rgb values normalized R,G,B=[0,1]
 	 * @return a vector (length=3) with srgb values normalized RGB=[0,1]
 	 */
 	public float[] fromRGB(float[] srgb) {
@@ -101,8 +96,8 @@ public class ColorSpaceRGB extends ColorSpaceJMR {
 	}
 
 	/**
-	 * Returns an array with chromaticity degree. float [0] -> achromaticity
-	 * degree. float [1] -> chromaticity degree.
+	 * Returns an array with chromaticity degree. float [0] - achromaticity
+	 * degree. float [1] - chromaticity degree.
 	 * 
 	 * @param col
 	 *            Color

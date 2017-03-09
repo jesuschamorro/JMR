@@ -15,7 +15,6 @@ import java.awt.Color;
  * searching images by semantic color meaning.
  * </p>
  *
- * <img src="http://www.couleur.org/spaces/HSVPolspace.jpg"/>
  *
  *
  * @author  SoTiLLo
@@ -321,8 +320,8 @@ public class ColorSpaceHSV extends ColorSpaceJMR {
 
   /**
  * Returns an array with chromaticity degree.
- * float [0] -> achromaticity degree.
- * float [1] -> chromaticity degree.
+ * float [0] - achromaticity degree.
+ * float [1] - chromaticity degree.
  * @param col Color
  * @return float[]
  */

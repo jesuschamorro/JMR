@@ -18,12 +18,12 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import jmr.descriptor.ColorData;
-import jmr.initial.media.JMRBufferedImage;
-import jmr.initial.media.JMRExtendedBufferedImage;
+import jmr.media.JMRBufferedImage;
+import jmr.media.JMRExtendedBufferedImage;
 
 
 /**
- * This class implement the method for color conversion using {@link ImageJMR} and
+ * This class implement the method for color conversion using JMRImage and
  * {@link ColorSpaceJMR} classes.
  *
  *
@@ -43,14 +43,14 @@ public class ColorConvertTools {
 	 * <code>
 	 *	color = srcCM.getNormalizedComponents(spixel, color, 0); //From spixel obtain RGB in [0,1]
 	 *	tmpColor = srcColorSpace.toCIEXYZ(color); //Transform from RGB to CIEXYZ
-	 *	--> tmpColor = dstColorSpace.fromCIEXYZ(tmpColor); //Transform CIEXYZ to CS (strange why loop)
-	 * 	--> tmpColor = dstColorSpace.toCIEXYZ(tmpColor); //Transform CS to CIEXYZ
+	 *       tmpColor = dstColorSpace.fromCIEXYZ(tmpColor); //Transform CIEXYZ to CS (strange why loop)
+	 * 	 tmpColor = dstColorSpace.toCIEXYZ(tmpColor); //Transform CS to CIEXYZ
 	 * 	tmpColor = dstColorSpace.fromCIEXYZ(tmpColor); //Transform CIEXYZ to CS
 	 * </code></p>
 	 *
 	 * @param 	src 	The source image with type {@link BufferedImage#TYPE_INT_ARGB} or {@link BufferedImage#TYPE_INT_RGB}
 	 * @param 	dstCs 	A color Space instance of {@link ColorSpaceJMR}.
-	 * @return			An ImageJMR object with a {@link ImageJMR#specialType}
+	 * @return			An ImageJMR object 
 	 */
 	public static JMRExtendedBufferedImage colorConvertOp(BufferedImage src, ColorSpace dstCs) {
 
@@ -141,7 +141,7 @@ public class ColorConvertTools {
          * A domain transform function. Transform a value in [a,b] domain to [c,d] domain
          *
          * <p>The transform applied is:
-         *    ((x-a)/(b-a))*(d-c) + c   where [a,b], [c,d] and a<b ; c<d
+         *    ((x-a)/(b-a))*(d-c) + c   where [a,b], [c,d] and a &lt; b ; c &lt; d
          * </p>
          *
          * @param x value belongs to [a,b] interval
@@ -159,8 +159,6 @@ public class ColorConvertTools {
         /**
          * 
          * @param x An array
-         * @param a min value of [a,b]
-         * @param b max value of [a,b]
          * @param c min value of [c,d]
          * @param d max value of [c,d]
          * @return A transformed Domain array
@@ -249,12 +247,11 @@ public class ColorConvertTools {
 	 * <code>N</code> {@link BufferedImage#TYPE_BYTE_GRAY} images.
 	 *
 	 * <p>
-	 * This method has been replaced by {@link ImageJMR#getLayeredByteImages()}.
+	 * This method has been replaced by JMRImage#getLayeredByteImages.
 	 * </p>
 	 *
 	 * @param src
 	 * @return <code>N</code> {@link BufferedImage#TYPE_BYTE_GRAY} images.
-	 * @see ImageJMR#getLayeredByteImages().
 	 * @deprecated not used in JMR SIAR
 	 */
 	public static BufferedImage[] convert2SlideImage(BufferedImage src) {
@@ -313,7 +310,7 @@ public class ColorConvertTools {
 	 * <code>int[]</code> array with pixels interleaved.
 	 *
 	 * <p>
-	 *	eg: <code>pixel(1,0) -> {20,255,200}</code> is converted into
+	 *	eg: <code>pixel(1,0) : {20,255,200}</code> is converted into
 	 * <code>
 	 * pixArray[3]=20;
 	 * pixArray[4]=255;

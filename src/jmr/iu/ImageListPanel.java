@@ -4,8 +4,6 @@ import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import javax.swing.JPanel;
-import jmr.result.JMRResult;
-import jmr.result.ResultList;
 import jmr.result.ResultMetadata;
 
 /**

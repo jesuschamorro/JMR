@@ -1,15 +1,15 @@
 package jmr.descriptor;
 
 import java.awt.color.ColorSpace;
-import jmr.initial.media.JMRExtendedBufferedImage;
-import jmr.initial.colorspace.ColorSpaceJMR;
-import jmr.initial.colorspace.ColorConvertTools;
+import jmr.media.JMRExtendedBufferedImage;
+import jmr.colorspace.ColorSpaceJMR;
+import jmr.colorspace.ColorConvertTools;
 
 /**
  * 
  * @author Jesús Chamorro Martínez (jesus@decsai.ugr.es)
  */
-public abstract class ColorDescriptor extends MediaDescriptor {
+public abstract class ColorDescriptor implements MediaDescriptor {
     
   protected int colorSpaceType;  
     

@@ -12,8 +12,8 @@ import java.sql.DriverManager;
 
 /**
  * @author Jose Manuel Soto Hidalgo
- * @author  RAT Benoit <br/>
- * (<a href="http://ivrg.epfl.ch" target="about_blank">IVRG-LCAV-EPFL</a> &
+ * @author  RAT Benoit 
+ * (<a href="http://ivrg.epfl.ch" target="about_blank">IVRG-LCAV-EPFL</a> 
  *  <a href="http://decsai.ugr.es/vip" target="about_blank">VIP-DECSAI-UGR</a>)
  * @version 1.0
  * @since 14 déc. 07

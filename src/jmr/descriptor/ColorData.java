@@ -1,7 +1,6 @@
 package jmr.descriptor;
 
 
-import jmr.initial.media.Media;
 import jmr.result.JMRResult;
 import jmr.result.FloatResult;
 import java.awt.Color;
@@ -18,7 +17,7 @@ import java.security.InvalidParameterException;
    la euclídea, y consideraba casos segun espacio. Realmente esto tendría que
    trasladarse a la clase que represente el color, no tanto a un descriptor.
 */
-public class ColorData extends MediaDescriptor {
+public class ColorData implements MediaDescriptor {
 
   /** The color of this descriptor */
   protected Color colorData;
@@ -32,10 +31,10 @@ public class ColorData extends MediaDescriptor {
   }
 
   
-  public ColorData(Media media) {
-    //TODO  
-    colorData = null;
-  }
+//  public ColorData(Media media) {
+//    //TODO  
+//    colorData = null;
+//  }
   
   
   /** Return the color associated to this ColorData object
@@ -101,5 +100,12 @@ public class ColorData extends MediaDescriptor {
     }
     return ( compare((ColorData) mediaDescriptor) );
   }
+
+    
+
+    @Override
+    public void init(Object media) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }

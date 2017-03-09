@@ -77,7 +77,7 @@ public abstract class ColorSpaceJMR extends ColorSpace {
   protected static final double power1 = 1.0 / 2.4;
 
   /**
-   * Constructor of the abstract class ColorSpaceJMR <br/>
+   * Constructor of the abstract class ColorSpaceJMR 
    * It is better to use the method {@link #getInstance(int)}
    *
    * @param type 		Which type of color Space
@@ -287,7 +287,6 @@ public abstract class ColorSpaceJMR extends ColorSpace {
 
   /**
    * Return the string value of the colorSpaceType
-   * @param 	colorSpaceType 	The color space type
    * @return 	A String with the name of the Color Space Type
    */
   public static String[] getListColorSpaceNames() {

@@ -12,8 +12,7 @@ import java.awt.image.Raster;
 import java.util.ArrayList;
 import jmr.colorspace.ColorConvertTools;
 import jmr.colorspace.ColorSpaceJMR;
-import jmr.initial.media.JMRExtendedBufferedImage;
-import jmr.initial.media.Media;
+import jmr.media.JMRExtendedBufferedImage;
 import jmr.tools.JMRImageTools;
 
 /**
@@ -22,7 +21,7 @@ import jmr.tools.JMRImageTools;
  * @author Jose Manuel Soto Hidalgo (jmsoto@uco.es)
  * @author Jesús Chamorro Martínez (jesus@decsai.ugr.es)
  */
-public class MPEG7DominantColors extends MediaDescriptor {
+public class MPEG7DominantColors implements MediaDescriptor {
 
     /**
      * A vector of <code>MPEG7SingleDominatColor</code>
@@ -124,7 +123,7 @@ public class MPEG7DominantColors extends MediaDescriptor {
    */
   public MPEG7DominantColors(BufferedImage img) {
     this();
-    this.calculate(img);
+    this.init(img);
   }
   
   
@@ -196,11 +195,12 @@ public class MPEG7DominantColors extends MediaDescriptor {
 	 * @param media
 	 *            The media from which the descriptor is calculated
 	 */
-	public void calculate(Media media) {
+    @Override
+	public void init(Object media) {
 		// The MPEG7DominantColors only can be calculated from
 		// JMRExtendedBufferedImage
 		if (media instanceof JMRExtendedBufferedImage) {
-			calculate((JMRExtendedBufferedImage) media);
+			init((JMRExtendedBufferedImage) media);
 		}
 	}
 	
@@ -212,7 +212,7 @@ public class MPEG7DominantColors extends MediaDescriptor {
 	 * @param img
 	 *            The image from which the descriptor is calculated
 	 */
-	public void calculate(JMRExtendedBufferedImage img) {		
+	public void init(JMRExtendedBufferedImage img) {		
                 JMRExtendedBufferedImage imgSource = img;
 		// We convert the JMRBufferedImage to the same MPEGDominantColor
 		// descriptor color space
@@ -228,9 +228,9 @@ public class MPEG7DominantColors extends MediaDescriptor {
 	}
 
         
-        public void calculate(BufferedImage img) {		
+        public void init(BufferedImage img) {		
             JMRExtendedBufferedImage imgJMR = new JMRExtendedBufferedImage(img);
-            this.calculate(imgJMR);
+            this.init(imgJMR);
 	}
         
         
@@ -242,7 +242,7 @@ public class MPEG7DominantColors extends MediaDescriptor {
                     imgIn = JMRImageTools.resize(img,new Dimension(200,(int)(200.0*rate)));
                 }
             }          
-            this.calculate(imgIn);
+            this.init(imgIn);
             return imgIn;
 	}
         

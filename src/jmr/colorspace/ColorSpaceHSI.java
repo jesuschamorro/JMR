@@ -12,7 +12,6 @@ import java.awt.Color;
  * <a href="http://java.sun.com/products/java-media/jai/forDevelopers/jai-apidocs/javax/media/jai/IHSColorSpace.html">
  * JAI API of IHSColorSpace</a>
  *
- * <img src="http://www.couleur.org/spaces/HSIPolspace.jpg"/>
  *
  * @author  SoTiLLo
  * @version 1.0
@@ -388,8 +387,8 @@ public class ColorSpaceHSI extends ColorSpaceJMR {
 
   /**
    * Returns an array with chromaticity degree.
-   * float [0] -> achromaticity degree.
-   * float [1] -> chromaticity degree.
+   * float [0] - achromaticity degree.
+   * float [1] - chromaticity degree.
    * @param col Color
    * @return float[]
    */

@@ -3,14 +3,14 @@ package jmr.initial.db;
 import java.sql.ResultSet;
 
 /**
- * Interface to use MySQL and {@link VisualDescriptor}.
+ * Interface to use MySQL and  VisualDescriptor.
  *
  * This is an interface with all the function that need to be implemented to correctly
- * load or save all type of {@link VisualDescriptor} to the MySQL Database.
+ * load or save all type of  VisualDescriptor to the MySQL Database.
  *
  *
- * @author  RAT Benoit <br/>
- * (<a href="http://ivrg.epfl.ch" target="about_blank">IVRG-LCAV-EPFL</a> &
+ * @author  RAT Benoit 
+ * (<a href="http://ivrg.epfl.ch" target="about_blank">IVRG-LCAV-EPFL</a> 
  *  <a href="http://decsai.ugr.es/vip" target="about_blank">VIP-DECSAI-UGR</a>)
  * @version 1.0
  * @since 15 dec. 07
@@ -38,9 +38,8 @@ public interface Descriptor2MySQL {
   public String createTable();
 
   /**
-   * Return the MySQL syntax for {@link PreparedStatement} when we want to do a <code>REPLACE</codeA>
+   * Return the MySQL syntax for when we want to do a <code>REPLACE</code>
    * @return the MySQL syntax for REPLACE operation.
-   * @see #toMySQL(int, mySQL).
    */
   public String replaceHeader();
 
@@ -62,14 +61,14 @@ public interface Descriptor2MySQL {
   public void toMySQL(int ID, mySQL db);
 
   /**
-   * Recover the descriptor from the MySQL to set the {@link VisualDescriptor} object.
+   * Recover the descriptor from the MySQL to set the  VisualDescriptor object.
    * @param 	ID	The Photo_ID of the image.
    * @param 	db	The {@link mySQL} database previously connected.
    */
   public void fromMySQL(int ID, mySQL db);
 
   /**
-   * Set the {@link VisualDescriptor} using the next row (<code>n</code>)in the {@link ResultSet}.
+   * Set the  VisualDescriptor using the next row (<code>n</code>)in the {@link ResultSet}.
    * <p> We start by the result.next() method which mean we need to use the while
    * loop (not the do..while).</p>
    * @param result A result at the position <code>n-1</code>.

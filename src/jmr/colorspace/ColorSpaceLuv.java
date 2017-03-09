@@ -8,16 +8,12 @@ import java.awt.Color;
 /**
  * L*,u*,v* or CIELUV Color Space is an approximate perceptually uniform space.
  *
- * <p> This space is recommended by the CIE for application in additive light condition (Sangwine & Horne 1998).
+ * <p> This space is recommended by the CIE for application in additive light condition (Sangwine  Horne 1998).
  * The L* component is the same as for {@link ColorSpaceLab} and the u* and v* coordinates are defined from the xy-diagrams.<br>
  * This space is obtained from CIEXYZ 1931 and it use a Reference White also called {@link WhitePoint}
  * to normalized these XYZ value.</p>
  *
  *
- * <p>
- * <img src="http://www.couleur.org/spaces/Luvspace.jpg"/>
- * <img src="http://www.couleur.org/equations/luv.gif"/>
- * </p>
  *
  *
  * @author  SoTiLLo

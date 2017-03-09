@@ -19,15 +19,13 @@ import java.awt.Color;
  * Max indicates how much black color it has, giving the flavor of shade, Min indicates
  * how much white color it has, giving the flavor of tint. The Diff indicates how much
  * gray it contains and how close to the pure color, giving the flavor of tone. It is defined
- * as the difference between max and min.<br/>
+ * as the difference between max and min.
  *  (This space is similar to {@link ColorSpaceHSI}).</p>
  *
  *
- * <img src="http://www.lg-elite.com/MIGR/cmip/hmmd/fig1.jpg"/>
- *
  * <p>
  * For more details about the quantification and extremum value of this space
- * see {@link #fromRGB(float[])}.<br\>
+ * see {@link #fromRGB(float[])}.
  * The inverse function to go from HMMD space to sRGB/CIEXYZ called {@link #toRGB(float[])}
  *  is not implemented.
  * </p>
@@ -107,7 +105,7 @@ public class ColorSpaceHMMD extends ColorSpaceJMR {
 	/**
 	 * Transform a HMMD pixel in a RGB pixel.
 	 *
-	 *  <p style="color:red">This function is not correctly implemented and use strictly the HSI->RGB convertion</p>
+	 *  <p style="color:red">This function is not correctly implemented and use strictly the HSI to RGB convertion</p>
 	 *
 	 * @param	hmmdVec	a float vector (length=3) with hsv values normalized H=[0,360] and Max,Min,Diff=[0,1]
 	 * @return 			a float vector (length=3) with rgb values normalized R,G,B=[0,1]

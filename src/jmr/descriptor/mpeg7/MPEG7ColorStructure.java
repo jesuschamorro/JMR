@@ -2,12 +2,12 @@ package jmr.descriptor.mpeg7;
 
 import java.awt.image.Raster;
 import jmr.descriptor.ColorDescriptor;
-import jmr.initial.media.JMRExtendedBufferedImage;
-import jmr.initial.colorspace.ColorSpaceJMR;
+import jmr.media.JMRExtendedBufferedImage;
+import jmr.colorspace.ColorSpaceJMR;
 import jmr.descriptor.MediaDescriptor;
+import jmr.media.JMRBufferedImage;
 import jmr.result.JMRResult;
 import jmr.result.FloatResult;
-import jmr.initial.media.Media;
 
 /**
  * Color Structure Descriptor from MPEG7 standard.
@@ -23,23 +23,23 @@ import jmr.initial.media.Media;
  *  the color histogram, this descriptor can distinguish between two images in which
  *  a given color is present in identical amounts but where the structure of the
  *  groups of pixels having that color is different in the two images.
- *  Color values are given by the {@link ColorSpaceHMMD} which is quantized non-uniformly
+ *  Color values are given by the ColorSpaceHMMD which is quantized non-uniformly
  *  into 32, 64, 128 or 256 bins {@link #qLevels}.
  *  Each bin amplitude value is represented by an
  *  8-bit code. The Color Structure descriptor provides additional functionality
  *  and improved similarity-based image retrieval performance for natural images
  *  compared to the ordinary color histogram.
- * <br/><a style="font-size:small;font-style:italic" href="http://www.chiariglione.org/mpeg/standards/mpeg-7">
+ * <a style="font-size:small;font-style:italic" href="http://www.chiariglione.org/mpeg/standards/mpeg-7">
  * Definition from this link</a>
  * </p>
  *
  * <p>
  * This class is inspired by ColorStructureImplementation.java
- * from  <a href="http://www.semanticmetadata.net">Caliph & Emir project</a>
+ * from  <a href="http://www.semanticmetadata.net">Caliph  Emir project</a>
  * </p>
  *
- * @author RAT Benoit <br/>
- * (<a href="http://ivrg.epfl.ch" target="about_blank">IVRG-LCAV-EPFL</a> &
+ * @author RAT Benoit 
+ * (<a href="http://ivrg.epfl.ch" target="about_blank">IVRG-LCAV-EPFL</a> 
  *  <a href="http://decsai.ugr.es/vip" target="about_blank">VIP-DECSAI-UGR</a>)
  * @version 1.0
  * @since 23 nov. 07
@@ -70,9 +70,7 @@ public class MPEG7ColorStructure extends ColorDescriptor {
 
   /**
    * Default constructor without parameters.
-   * <p>We use the MPEG7 recommendation as default parameters <ul>
-   * <li>{@link #qLevels} = {@link #DEFAULT_NUM_LEVELS}</li>
-   * </ul></p>
+   *
    */
   public MPEG7ColorStructure() {
     this(DEFAULT_NUM_LEVELS);
@@ -102,9 +100,13 @@ public class MPEG7ColorStructure extends ColorDescriptor {
    */
   public MPEG7ColorStructure(JMRExtendedBufferedImage im, int qLevels) {
     this(qLevels);
-    calculate(im);
+    init(im);
   }
 
+  public MPEG7ColorStructure(JMRBufferedImage im) {
+    this(new JMRExtendedBufferedImage(im) );
+  }
+  
   /* Initialize qLevels */
   private void init(int qLevels) {
     if (qLevels <= 32) {
@@ -130,6 +132,7 @@ public class MPEG7ColorStructure extends ColorDescriptor {
    * @see #compare(MPEG7ColorStructure desc)
    * @return The difference between descriptors
    */
+  @Override
   public JMRResult compare(MediaDescriptor mediaDescriptor) {
     // Only MPEG7ColorStructure objects can be compared
     if (! (mediaDescriptor instanceof MPEG7ColorStructure)) {
@@ -177,10 +180,11 @@ public class MPEG7ColorStructure extends ColorDescriptor {
    * the media given by parameter
    * @param media The media from which the descriptor is calculated
    */
-  public void calculate(Media media) {
+  @Override
+  public void init(Object media) {
     // The MPEG7ColorStructure can be only calculated from JMRExtendedBufferedImage
     if (media instanceof JMRExtendedBufferedImage) {
-      calculate( (JMRExtendedBufferedImage) media);
+      init( (JMRExtendedBufferedImage) media);
     }
   }
 
@@ -188,7 +192,7 @@ public class MPEG7ColorStructure extends ColorDescriptor {
    * the image given by parameter
    * @param im The image from which the descriptor is calculated
    */
-  public void calculate(JMRExtendedBufferedImage im) {
+  public void init(JMRExtendedBufferedImage im) {
     if (!checkImage(im)) {
       im = convertImg(im);
     }

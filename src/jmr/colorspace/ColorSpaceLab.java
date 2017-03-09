@@ -8,18 +8,14 @@ import java.awt.Color;
 /**
  * L*,a*,b* or CIELAB Color Space is an approximate perceptually uniform space.
  *
- * <p> This space is recommended for application in reflective light (Wyszecki & Stiles 1982) such in
- * the printing industry.<br/>
+ * <p> This space is recommended for application in reflective light (Wyszecki  Stiles 1982) such in
+ * the printing industry.
  * 	L* stands for lightness value and take into consideration the non-linear relation between
  * the lightness and the perceptual brightness or relative luminance of a point. The component
  * a* denotes relative redness-greenness and b* yellowness-blueness.
  * This space is obtained from CIEXYZ 1931 and it use a Reference White also called {@link WhitePoint}
  * to normalized these XYZ value.</p>
  *
- * <p>
- * <img src="http://www.couleur.org/spaces/Labspace.jpg"/>
- * <img src="http://www.couleur.org/equations/lab.gif"/>
- * </p>
  *
  *
  * @author  SoTiLLo

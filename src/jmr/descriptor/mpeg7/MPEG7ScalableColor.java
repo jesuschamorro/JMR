@@ -1,39 +1,34 @@
 package jmr.descriptor.mpeg7;
 
-import jmr.initial.descriptor.mpeg7.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.Raster;
 import jmr.descriptor.ColorDescriptor;
-import jmr.initial.media.JMRExtendedBufferedImage;
-import jmr.initial.colorspace.ColorSpaceJMR;
+import jmr.media.JMRExtendedBufferedImage;
+import jmr.colorspace.ColorSpaceJMR;
 import jmr.result.JMRResult;
 import jmr.result.FloatResult;
-import jmr.initial.media.Media;
 import jmr.descriptor.MediaDescriptor;
 
 /**
  * Scalable Color Descriptor from MPEG7 standard.
  *
- * <p>
+ *
  * The Scalable Color Descriptor is a Color Histogram in HSV Color Space,
  * which is encoded by a Haar transform. Its binary representation is scalable
  * in terms of bin numbers and bit representation accuracy over a broad range of data rates.
  * The Scalable Color Descriptor is useful for image-to-image matching and retrieval based
  * on color feature. Retrieval accuracy increases with the {@link #nofCoefficients} used in
  * the representation.
- * <br/><a style="font-size:small;font-style:italic" href="http://www.chiariglione.org/mpeg/standards/mpeg-7">
- * Definition from this link</a>
- * </p>
+ * 
+ * 
+ * 
  *
  * <p>
  * This class is inspired by ScalableColorImpl.java
- * from  <a href="http://www.semanticmetadata.net">Caliph & Emir project</a>
+ * from  <a href="http://www.semanticmetadata.net">Caliph  Emir project</a>
  * </p>
  *
- * @author RAT Benoit <br/>
- * (<a href="http://ivrg.epfl.ch" target="about_blank">IVRG-LCAV-EPFL</a> &
- *  <a href="http://decsai.ugr.es/vip" target="about_blank">VIP-DECSAI-UGR</a>)
- * @since 23 nov. 07
+ * 
  *
  */
 public class MPEG7ScalableColor extends ColorDescriptor {
@@ -217,7 +212,7 @@ public class MPEG7ScalableColor extends ColorDescriptor {
 
   /**
    * Constructor initiating the descriptor without computing the feature vector from an image
-   * the method {@link #extract(ImageJMR)} need to be called after construction of this descriptor
+   * the method  need to be called after construction of this descriptor
    *
    * @param numC  Number of coeefficient in the histogram : 32,64,128,256
    * @param numB  Number of bitplanes discarded in the histograms response
@@ -252,12 +247,11 @@ public class MPEG7ScalableColor extends ColorDescriptor {
    */
   public MPEG7ScalableColor(JMRExtendedBufferedImage im, int numC, int numB) {
     this(numC,numB);
-    calculate(im);
+    init(im);
   }
 
   /**
-   *  Constructor calling {@link #MPEG7ScalableColor(ImageJMR, int, int)} with default
-   * value {@link #nofCoefficients}=256 and {@link #nofBitPlanesDiscarded}=0
+   *  
    * */
   public MPEG7ScalableColor(JMRExtendedBufferedImage im) {
     this(im, 256, 0);
@@ -326,10 +320,11 @@ public class MPEG7ScalableColor extends ColorDescriptor {
    * the media given by parameter
    * @param media The media from which the descriptor is calculated
    */
-  public void calculate(Media media) {
+  @Override
+  public void init(Object media) {
     // The MPEG7ScalableColor can be calculated only from JMRExtendedBufferedImage
     if (media instanceof JMRExtendedBufferedImage) {
-      calculate( (JMRExtendedBufferedImage) media);
+      init( (JMRExtendedBufferedImage) media);
     }
   }
 
@@ -337,7 +332,7 @@ public class MPEG7ScalableColor extends ColorDescriptor {
    * the image given by parameter
    * @param im The image from which the descriptor is calculated
    */
-  public void calculate(JMRExtendedBufferedImage im) {
+  public void init(JMRExtendedBufferedImage im) {
     if (!checkImage(im)) {
       im = convertImg(im);
     }

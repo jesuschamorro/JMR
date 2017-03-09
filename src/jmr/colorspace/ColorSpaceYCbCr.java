@@ -9,14 +9,10 @@ import java.awt.Color;
  * YCbCr or Y'CbCr is a family of opponent color spaces mainly used in video systems.
  *
  * <p>
- * Y' is the luma component and Cb and Cr are the blue and red chroma components.<br\>
+ * Y' is the luma component and Cb and Cr are the blue and red chroma components.
  * For more details about the quantification and extremum value of this space
  * see {@link #fromRGB(float[])}. </p>
  *
- * <p>
- * <img src="http://www.couleur.org/spaces/YCbCrspace.jpg"/><br>
- * <img src="http://www.couleur.org/equations/ycbcr.gif"/>
- * </p>
  *
  *
  * @author SoTiLLo
@@ -51,7 +47,7 @@ public class ColorSpaceYCbCr extends ColorSpaceJMR {
 	 * Cr = + 0.5 * R' - 0.418688 * G' - 0.081312 * B'			<br>
 	 * ........................................................	<br>
 	 * R', G', B' in [0; 1]										<br>
-	 * Y' in [0; 1] & Cb,Cr [-0.5; 0.5]							<br>
+	 * Y' in [0; 1] and Cb,Cr [-0.5; 0.5]							<br>
 	 * </code>
 	 *
 	 * @param	rgbVec	a vector (length=3) with rgb values normalized R,G,B=[0,1]
@@ -91,7 +87,7 @@ public class ColorSpaceYCbCr extends ColorSpaceJMR {
 	/**
 	 * transform a YCrCb pixel to a RGB pixel.
 	 *
-	 * @param 	ybrVec	a vector (length=3) with YCbCr values normalized  Y in [0; 1] & Cb,Cr [-0.5; 0.5]
+	 * @param 	ybrVec	a vector (length=3) with YCbCr values normalized  Y in [0; 1] and Cb,Cr [-0.5; 0.5]
 	 * @return 			a vector (length=3) with rgb values normalized R,G,B=[0,1]
 	 *
 	 * @see <a href="http://www.f4.fhtw-berlin.de/~barthel/ImageJ/ColorInspector">ColorInspector 3D v2.0</a>

@@ -12,7 +12,7 @@ package jmr.colorspace;
  * coordinates (x,y) of a perfect reflecting (or transmitting) white diffuser.
  * The CIE chromaticity coordinates are given for both the 2 degree field of view {@link #WP_CIE1931}
  *  and the 10 degree field of view {@link #WP_CIE1964}.
- *  <p/>
+ *  </p>
  *
  * @author  SoTiLLo
  * @version 1.0
