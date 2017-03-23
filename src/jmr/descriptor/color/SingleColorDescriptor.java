@@ -1,14 +1,17 @@
-package jmr.descriptor;
+package jmr.descriptor.color;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
+import jmr.descriptor.Comparator;
+import jmr.descriptor.MediaDescriptorAdapter;
 
 /**
  * A descriptor representing a single color associated to a visual media.
  * 
  * @author Jesús Chamorro Martínez (jesus@decsai.ugr.es)
  */
-public class SingleColorDescriptor extends MediaDescriptorAdapter<BufferedImage> {
+public class SingleColorDescriptor extends MediaDescriptorAdapter<BufferedImage> implements Serializable {
     
     /**
      * Main color associated to this descriptor 
@@ -88,7 +91,7 @@ public class SingleColorDescriptor extends MediaDescriptorAdapter<BufferedImage>
      */
     @Override
     public String toString(){
-        return "SingleColorDescriptor : [" + color.getRed() + "," + color.getGreen() + "," + color.getBlue()+"]";
+        return "SingleColorDescriptor: [" + color.getRed() + "," + color.getGreen() + "," + color.getBlue()+"]";
     }
     
     /**

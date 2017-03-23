@@ -1,4 +1,4 @@
-package jmr.descriptor.mpeg7;
+package jmr.initial.descriptor.mpeg7;
 
 import java.awt.image.Raster;
 import jmr.media.JMRExtendedBufferedImage;

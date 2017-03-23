@@ -1,4 +1,4 @@
-package jmr.descriptor.mpeg7;
+package jmr.initial.db;
 
 import java.io.ByteArrayInputStream;
 import java.sql.PreparedStatement;
@@ -17,7 +17,7 @@ import jmr.initial.db.Descriptor2MySQL;
  * @version 1.0
  */
 
-public class MPEG7ScalableColorSQL extends jmr.descriptor.mpeg7.MPEG7ScalableColor implements Descriptor2MySQL{
+public class MPEG7ScalableColorSQL extends jmr.descriptor.color.MPEG7ScalableColor implements Descriptor2MySQL{
 
   /**
    * Version of the descriptor:
@@ -25,21 +25,21 @@ public class MPEG7ScalableColorSQL extends jmr.descriptor.mpeg7.MPEG7ScalableCol
    */
   private float version = 1.0F;
 
-  /**
-   * Constructor initiating the descriptor without computing the feature vector from an image
-   * @param numC  Number of coeefficient in the histogram : 32,64,128,256
-   * @param numB  Number of bitplanes discarded in the histograms response
-   */
-  public MPEG7ScalableColorSQL(int numC, int numB) {
-    super(numC, numB);
-  }
-
-  /**
-   *  Constructor with default value {@link #nofCoefficients}=256 and {@link #nofBitPlanesDiscarded}=0
-   * */
-  public MPEG7ScalableColorSQL() {
-    super();
-  }
+//  /**
+//   * Constructor initiating the descriptor without computing the feature vector from an image
+//   * @param numC  Number of coeefficient in the histogram : 32,64,128,256
+//   * @param numB  Number of bitplanes discarded in the histograms response
+//   */
+//  public MPEG7ScalableColorSQL(int numC, int numB) {
+//    super(numC, numB);
+//  }
+//
+//  /**
+//   *  Constructor with default value {@link #nofCoefficients}=256 and {@link #nofBitPlanesDiscarded}=0
+//   * */
+//  public MPEG7ScalableColorSQL() {
+//    super();
+//  }
 
   /**
    * Constructor initiating the descriptor and computing the resulting feature vector from an image
@@ -158,7 +158,7 @@ public class MPEG7ScalableColorSQL extends jmr.descriptor.mpeg7.MPEG7ScalableCol
         pstmt.setInt(3, nofCoefficients);
         pstmt.setInt(4, nofBitPlanesDiscarded);
         pstmt.setBinaryStream(5, new ByteArrayInputStream(getBitPlane()), 256);
-        pstmt.setBinaryStream(6, new ByteArrayInputStream(getCoeffSign()), 32);
+        pstmt.setBinaryStream(6, new ByteArrayInputStream(getCoefficientSigns()), 32);
         pstmt.executeUpdate();
       }
       catch (SQLException e) {

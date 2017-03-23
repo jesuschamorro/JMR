@@ -1,6 +1,7 @@
 
 package jmr.descriptor;
 
+import java.io.Serializable;
 import java.util.function.BiFunction;
 
 /**
@@ -13,7 +14,7 @@ import java.util.function.BiFunction;
  * * @author Jesús Chamorro Martínez (jesus@decsai.ugr.es)
  */
 @FunctionalInterface 
-public interface Comparator<T extends MediaDescriptor, R> extends java.util.function.BiFunction<T, T, R>{
+public interface Comparator<T extends MediaDescriptor, R> extends java.util.function.BiFunction<T, T, R>, Serializable{
     /**
      * Applies this comparator to the given arguments.
      *

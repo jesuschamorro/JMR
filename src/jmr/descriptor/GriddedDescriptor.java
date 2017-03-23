@@ -23,10 +23,7 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T>{
      * List of descriptors
      */
     private ArrayList<MediaDescriptor<T>> descriptors;
-    /**
-     * Descriptor class for the tiles.
-     */
-    private final Class descriptorClass;
+    
     
     /**
      * Constructs a new descriptor using the given grid (and its media) where
@@ -44,12 +41,13 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T>{
         // The previous call does not initialize the tile descriptors. It will 
         // be done in the following setTilesDescriptors() call
         this.grid = grid;
-        this.descriptorClass = descriptorClass;
-        this.setTilesDescriptors();
+        this.setTilesDescriptors(descriptorClass);
     }
     /**
-     * First initialization of the descriptor as an empty list of descriptor. 
-     * Later, the list should be filled in with the descriptors of each tile.
+     * First initialization of the descriptor as an empty list of descriptor.
+     * 
+     * Later, the list should be filled in with the descriptors of each tile 
+     * (by calling {@link #setTilesDescriptors(java.lang.Class) }).
      *
      * @param media the media associated to this descriptor
      */
@@ -67,36 +65,16 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T>{
      * Set the list of descriptor by calculating a descriptor for each tile.  
      *
      */
-    private void setTilesDescriptors() {
+    private void setTilesDescriptors(Class descriptorClass) {
         T tile;
         MediaDescriptor descriptor;
         for (int i = 0; i < grid.getNumTiles(); i++) {
-            tile = (T)grid.getTile(i);
-            descriptor = this.createDescriptor(tile);
+            tile = (T)grid.getTile(i);            
+            descriptor = MediaDescriptorFactory.getInstance(descriptorClass, tile);
             descriptors.add(descriptor);
         }
     }
     
-    /**
-     * Constructs a descriptor for the tile. The class of the descriptor will
-     * be {@link #descriptorClass}, which must have, at least, a constructor  
-     * with a single parameter of type <code>T</code>.
-     * 
-     * @param tile the tile image
-     * @return a descriptor
-     */
-    private MediaDescriptor createDescriptor(T tile) {        
-        MediaDescriptor descriptor = null;
-        try {
-            // A constructor with a single parameter of type T must be available
-            Constructor constructor = descriptorClass.getConstructor(tile.getClass());
-            descriptor = (MediaDescriptor)constructor.newInstance(tile);           
-        } catch (Exception ex) {
-            throw new InvalidParameterException("Error in tile descriptor instantiation. A constructor with a single parameter of type "
-                                                +tile.getClass().getSimpleName()+" must be provided for the class "+descriptorClass.getSimpleName()+".");
-        }
-         return descriptor;
-    }
     
     /**
      * Returns a string representation of this descriptor

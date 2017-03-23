@@ -1,5 +1,6 @@
 package jmr.descriptor;
 
+import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  * 
  * @author Jesús Chamorro Martínez (jesus@decsai.ugr.es)
  */
-public class DescriptorList<T> extends MediaDescriptorAdapter<T>{
+public class DescriptorList<T> extends MediaDescriptorAdapter<T> implements Serializable{
     /**
      * List of descriptors
      */
@@ -28,7 +29,7 @@ public class DescriptorList<T> extends MediaDescriptorAdapter<T>{
     public DescriptorList(T media) {
         super(media, new DefaultComparator());
     }
-
+    
     /**
      * Initialize the descriptor as an empty list.
      *
@@ -45,7 +46,8 @@ public class DescriptorList<T> extends MediaDescriptorAdapter<T>{
      * @param descriptor descriptor to be appended to this list
      * @return <tt>true</tt> (as specified by 
      * {@link java.util.Collection#add(java.lang.Object) })
-     * @throws InvalidParameterException
+     * @throws InvalidParameterException if the new descriptor does not share 
+     * the list media source
      */
     public boolean add(MediaDescriptor<T> descriptor) {
         if (descriptor.getSource() != this.getSource()) {
@@ -62,7 +64,8 @@ public class DescriptorList<T> extends MediaDescriptorAdapter<T>{
      * @param index index at which the specified descriptor is to be inserted
      * @param descriptor descriptor to be inserted
      * @throws IndexOutOfBoundsException {@inheritDoc}
-     * @throws InvalidParameterException
+     * @throws InvalidParameterException if the new descriptor does not share 
+     * the list media source
      */
     public void add(int index, MediaDescriptor<T> descriptor) {
         if (descriptor.getSource() != this.getSource()) {
@@ -79,7 +82,8 @@ public class DescriptorList<T> extends MediaDescriptorAdapter<T>{
      * @param descriptor descriptor to be stored at the specified position
      * @return the descriptor previously at the specified position
      * @throws IndexOutOfBoundsException {@inheritDoc}
-     * @throws InvalidParameterException
+     * @throws InvalidParameterException if the new descriptor does not share 
+     * the list media source
      */
     public MediaDescriptor<T> set(int index, MediaDescriptor<T> descriptor) {
         if (descriptor.getSource() != this.getSource()) {

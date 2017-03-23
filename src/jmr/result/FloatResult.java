@@ -32,9 +32,9 @@ public class FloatResult implements JMRResult {
     }
 
     /**
-     * Sets the float number representing the result
+     * Set the float number representing the result
      *
-     * @param value
+     * @param value the newvalue
      */
     public void setValue(float value) {
         this.data = value;

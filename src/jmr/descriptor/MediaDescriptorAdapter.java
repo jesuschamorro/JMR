@@ -1,5 +1,7 @@
 package jmr.descriptor;
 
+import java.io.Serializable;
+
 /**
  * An abstract adapter class for media descriptors.
  * 
@@ -9,7 +11,7 @@ package jmr.descriptor;
  * {@link MediaDescriptor} are implemented with empty body). The main role of 
  * this class is:
  * 
- * <p><ul>
+ * <ul>
  * <li> To define a standard constructor where the two main properties of a 
  * descriptor are required: the media and the comparator. This contructor will
  * set both properties and will call the init method in order to calculate the
@@ -25,22 +27,22 @@ package jmr.descriptor;
  * comparision and setting the corresponding object.
  * 
  * <li> To implement the get/set source methods.
- * </ul><p>
+ * </ul>
  * 
  * The init method is kept as abstract: how a descriptor is calculated from 
  * the media must be implemented in each subclass.
  * 
  * Therefore, and summarizing, the descriptor class implementing this abstract 
  * class should:
- * <p><ul>
+ * <ul>
  * <li> Implement the method 
- * {@link MediaDescriptorAdapter#init(jmr.initial.media.Media)}, where the 
+ * {@link MediaDescriptorAdapter#init(java.lang.Object)}, where the 
  * descriptor data is initialized from the media, and
  * <li> Implement at least one constructor. This constructor should call the
  * super one which required two parameters: a media and a comparator.
- * </ul><p>
-// * And, for that, it is recommended to:
- * <p><ul>
+ * </ul>
+ * And, for that, it is recommended to:
+ * <ul>
  * <li> Implement a default (inner) comparator class extending the interface 
  * {@link Comparator}. The method 
  * {@link Comparator#apply(jmr.descriptor.MediaDescriptor, jmr.descriptor.MediaDescriptor) } 
@@ -48,33 +50,40 @@ package jmr.descriptor;
  * <li> Define a constructor with a single parameter of the media type, which 
  * will call the super one passing them (a) the media (b) and a new object built
  * using the default comparator class.
- * </ul><p>
+ * </ul>
  * 
  * @param <T> the type of media described by this object
  * 
  * @author Jesús Chamorro Martínez (jesus@decsai.ugr.es)
  */
-public abstract class MediaDescriptorAdapter<T> implements MediaDescriptor<T>{
+public abstract class MediaDescriptorAdapter<T> implements MediaDescriptor<T>, Serializable{
     /**
      * The source media of this descriptor
      */
-    protected T source = null;
+    protected transient T source = null;
     /**
      * A comparator for the descriptor. It uses a standard functional interface, 
      * allowing lambda expressions 
      */
-    public Comparator comparator = null;
+    protected Comparator comparator = null;
 
     /**
      * Constructs a descriptor from the given media and set as comparator the
      * one given by parameter
      * 
-     * @param media
-     * @param comparator 
+     * @param media the media ssociated to this descriptor
+     * @param comparator the comparator associated to this descriptor
      */
     protected MediaDescriptorAdapter(T media, Comparator comparator){
         setSource(media);
         setComparator(comparator);
+    }
+    
+    /**
+     * Only for serialization tasks. I should not be used in subclasses
+     */
+    protected MediaDescriptorAdapter(){
+        System.out.println("Serializando: constructor vacio de MediaDescriptorAdapter");
     }
     
     /**

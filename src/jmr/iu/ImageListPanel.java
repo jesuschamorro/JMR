@@ -2,19 +2,28 @@ package jmr.iu;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.util.Collection;
 import java.util.List;
 import javax.swing.JPanel;
 import jmr.result.ResultMetadata;
 
 /**
- *
+ * Panel for showing a list of images. 
+ * 
  * @author Jesús Chamorro Martínez (jesus@decsai.ugr.es)
  */
 public class ImageListPanel extends javax.swing.JPanel {
+    /**
+     * Internal panel for allocating images.
+     */
     private JPanel internalPanel;
+    /**
+     * Default size for the images showed in this panel.
+     */
     private final static Dimension DEFAULT_COMMON_SIZE = new Dimension(100,100);
     
     /**
+     * Constructs an empty list panel.
      * 
      */
     public ImageListPanel() {
@@ -26,49 +35,71 @@ public class ImageListPanel extends javax.swing.JPanel {
     }
 
     /**
+     * Constructs a list panel from the data stored in the given metadata list.
      * 
-     * @param list list of result objetcs 
+     * @param list list of {@link jmr.result.ResultMetadata} objetcs. The
+     * metadata of each result must be an image (if not, an exception is thrown)
      */
-    public ImageListPanel(List< ResultMetadata<BufferedImage> > list) {
+    public ImageListPanel(List<ResultMetadata> list) {
         this(); 
         if (list!=null) add(list);
     }
     
     /**
+     * Add a set of images to the list.
      * 
-     * @param list list of result objetcs 
+     * @param list list of {@link jmr.result.ResultMetadata} objetcs. The
+     * metadata of each result must be an image (if not, an exception is thrown)
      */
-    public void add(List< ResultMetadata<BufferedImage> > list) {  
-        for (ResultMetadata<BufferedImage> r : list) {
+    public void add(List<ResultMetadata> list) {  
+        for (ResultMetadata r : list) {
             String label =  r.getResult().toString(); 
-            this.add(r.getMetadata(), label);           
+            this.add((BufferedImage)r.getMetadata(), label);           
         }
     }
     
     /**
+     * Add a set of images to the list.
      * 
-     * @param image
-     * @param imageInfo
-     * @param originalSize 
+     * @param list the list of images to be added
      */
-    public void add(BufferedImage image, String imageInfo, boolean originalSize){
-        ImagePanel imgPanel = new ImagePanel(image,imageInfo);
+    public void add(Collection<BufferedImage> list) {  
+        for (BufferedImage image : list) {
+            this.add(image,null);           
+        }
+    }
+    
+    /**
+     * Add a new image to the list with a tip label. By means the parameter 
+     * <code>originalSize</code>, the original size or the default one can be
+     * selected.
+     * 
+     * @param image the image to be added
+     * @param label the tip label associated to the image
+     * @param originalSize if <tt>true</tt>, the original image size is used
+     */
+    public void add(BufferedImage image, String label, boolean originalSize){
+        ImagePanel imgPanel = new ImagePanel(image,label);
         if(!originalSize) imgPanel.setPreferredSize(DEFAULT_COMMON_SIZE);
         internalPanel.add(imgPanel);
     }
     
     /**
+     * Add a new image to the list with a tip label and using the default size 
+     * {@link #DEFAULT_COMMON_SIZE}.
      * 
-     * @param image
-     * @param imageInfo 
+     * @param image the image to be added
+     * @param label the tip label associated to the image
      */
-    public void add(BufferedImage image, String imageInfo){
-        this.add(image,imageInfo,false);
+    public void add(BufferedImage image, String label){
+        this.add(image,label,false);
     }
     
     /**
+     * Add a new image to the list without tip label and using the default size 
+     * {@link #DEFAULT_COMMON_SIZE}.
      * 
-     * @param image 
+     * @param image the image to be added
      */
     public void add(BufferedImage image){
         this.add(image,null,false);

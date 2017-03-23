@@ -3,7 +3,7 @@ package jmr.media;
 import java.awt.image.BufferedImage;
 
 /**
- * Interfaz representing a video media
+ * Interface representing a video media
  * 
  * 
  * @author Jesús Chamorro Martínez (jesus@decsai.ugr.es)

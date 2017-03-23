@@ -1,4 +1,4 @@
-package jmr.descriptor.mpeg7;
+package jmr.initial.descriptor.mpeg7;
 
 import jmr.media.JMRExtendedBufferedImage;
 import jmr.colorspace.ColorSpaceJMR;

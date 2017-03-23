@@ -13,10 +13,11 @@ package jmr.result;
  * or user designed classes, may be also useful. 
  * 
  * @author Jesús Chamorro Martínez (jesus@decsai.ugr.es)
+ * @param <R> result type
  * @param <T> metadata type 
  */
-public class ResultMetadata<T> implements JMRResult{
-    private JMRResult result;
+public class ResultMetadata<R,T> implements Comparable<ResultMetadata> { //implements JMRResult{
+    private R result;
     private T metadata;
     
     /**
@@ -25,7 +26,7 @@ public class ResultMetadata<T> implements JMRResult{
      * @param result the result to be extended with metadata
      * @param metadata the metadata associated to the result
      */
-    public ResultMetadata(JMRResult result, T metadata){
+    public ResultMetadata(R result, T metadata){
         this.result = result;
         this.metadata = metadata;
     }
@@ -35,7 +36,7 @@ public class ResultMetadata<T> implements JMRResult{
      *
      * @return the result associated to this object
      */
-    public JMRResult getResult(){
+    public R getResult(){
         return result;
     }
     
@@ -44,7 +45,7 @@ public class ResultMetadata<T> implements JMRResult{
      * 
      * @param result the new result
      */
-    public void setResult(JMRResult result){
+    public void setResult(R result){
         this.result = result;     
     }
     
@@ -67,33 +68,39 @@ public class ResultMetadata<T> implements JMRResult{
     }
     
     // <editor-fold defaultstate="collapsed" desc="JMRResult interface implementation code"> 
-    @Override
-    public int getType() {
-        return result.getType();
-    }
-
-    @Override
-    public double toDouble() {
-        return result.toDouble();
-    }
-
-    @Override
-    public float toFloat() {
-        return result.toFloat();
-    }
-
-    @Override
-    public int toInteger() {
-        return result.toInteger();
-    }
-
-    @Override
-    public int compareTo(JMRResult o) {
-        if (o.getClass() == this.getClass()) {
-            return result.compareTo(((ResultMetadata)o).result);
-        } else {
-            return result.compareTo(o);
-        }
-    }
+//    @Override
+//    public int getType() {
+//        return result.getType();
+//    }
+//
+//    @Override
+//    public double toDouble() {
+//        return result.toDouble();
+//    }
+//
+//    @Override
+//    public float toFloat() {
+//        return result.toFloat();
+//    }
+//
+//    @Override
+//    public int toInteger() {
+//        return result.toInteger();
+//    }
+//
+//    @Override
+//    public int compareTo(JMRResult o) {
+//        if (o.getClass() == this.getClass()) {
+//            return result.compareTo(((ResultMetadata)o).result);
+//        } else {
+//            return result.compareTo(o);
+//        }
+//    }
     // </editor-fold> 
+    
+    @Override
+    public int compareTo(ResultMetadata o) {       
+        return ((Comparable)result).compareTo(o.result);
+    }
+    
 }

@@ -1,13 +1,12 @@
-package jmr.descriptor.mpeg7;
+package jmr.initial.db;
 
-import jmr.descriptor.mpeg7.MPEG7EdgeHistogram;
-import jmr.initial.db.mySQL;
-import java.sql.ResultSet;
-import jmr.media.JMRExtendedBufferedImage;
 import jmr.initial.db.Descriptor2MySQL;
-import java.sql.SQLException;
-import java.sql.PreparedStatement;
+import jmr.initial.db.mySQL;
 import java.io.ByteArrayInputStream;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import jmr.media.JMRExtendedBufferedImage;
 
 /**
  * <p>Title: JMR Project</p>
@@ -18,45 +17,45 @@ import java.io.ByteArrayInputStream;
  * @version 1.0
  */
 
-public class MPEG7EdgeHistogramSQL extends MPEG7EdgeHistogram implements Descriptor2MySQL {
+public class MPEG7ColorStructureSQL extends jmr.descriptor.color.MPEG7ColorStructure implements Descriptor2MySQL {
+
   /**
    * Version of the descriptor:
    * If the compute method is recall and version is newer the FeatureVec is override
    */
   private float version = 1.0F;
 
-  /**
-   * Default constructor without parameters.
-   * 
-   */
-  public MPEG7EdgeHistogramSQL() {
-    super();
-  }
-
-  /**
-   * Constructor
-   *  @param threshold Threshold
-   *  @param numBlock Number of blocks
-   */
-  public MPEG7EdgeHistogramSQL(int threshold, int numBlock) {
-    super(threshold,numBlock);
-  }
-
-  /**
-   * Constructs the object for an image using the default parameters.
-   * @param im	The image
-   */
-  public MPEG7EdgeHistogramSQL(JMRExtendedBufferedImage im) {
-    super(im);
-  }
+//  /**
+//   * Default constructor without parameters.
+//   * 
+//   */
+//  public MPEG7ColorStructureSQL() {
+//    super();
+//  }
+//
+//  /**
+//   * Constructor
+//   *  @param qLevels Number of quantization levels
+//   */
+//  public MPEG7ColorStructureSQL(int qLevels) {
+//    super(qLevels);
+//  }
+//
+//  /**
+//   * Constructs the object for an image using the default parameters.
+//   * @param im	The image
+//   */
+//  public MPEG7ColorStructureSQL(JMRExtendedBufferedImage im) {
+//    super(im);
+//  }
 
   /**
    * Constructs the object for an image using the specified parameters.
    * @param im	The image
-   * @param numBlock Number of blocks
+   * @param qLevels Number of quantization levels
    */
-  public MPEG7EdgeHistogramSQL(JMRExtendedBufferedImage im, int treshold, int numBlock) {
-    super(im,treshold, numBlock);
+  public MPEG7ColorStructureSQL(JMRExtendedBufferedImage im, int qLevels) {
+    super(im,qLevels);
   }
 
   /**
@@ -68,25 +67,37 @@ public class MPEG7EdgeHistogramSQL extends MPEG7EdgeHistogram implements Descrip
   }
 
   /* (non-Javadoc)
-   */
-  public String getTableName() {
-    return "`DescMPEG7_EHD`";
-  }
-
-  /* (non-Javadoc)
    * @see es.ugr.siar.ip.desc.Descriptor2MySQL#createTable()
    */
   public String createTable() {
     String str = "CREATE TABLE " + getTableName() + " ( \n";
-    String[] paramName = getSQLParamNames();
-    str += "`" + paramName[0] + "` INT( 10 ) NOT NULL , \n";
-    str += "`" + paramName[1] + "` FLOAT NOT NULL DEFAULT '1.0', \n";
-    str += "`" + paramName[2] +
-        "` SMALLINT UNSIGNED NOT NULL DEFAULT '256', \n";
-    str += "`" + paramName[3] + "` INT(10) NOT NULL DEFAULT '1100', \n";
-    str += "`" + paramName[4] + "` BINARY( 80 ) NULL, \n";
-    str += "PRIMARY KEY ( `" + paramName[0] + "` )\n" +
+    String[] colName = getSQLParamNames();
+    str += colName[0] + " INT( 10 ) NOT NULL , \n";
+    str += colName[1] + " FLOAT NOT NULL DEFAULT '1.0', \n";
+    str += colName[2] + " SMALLINT UNSIGNED NOT NULL DEFAULT '256', \n";
+    str += colName[3] + " VARBINARY( 256 ) NULL, \n";
+    str += "PRIMARY KEY ( `Photo_ID` )\n" +
         ") ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci";
+
+    return str;
+  }
+
+  /* (non-Javadoc)
+   * @see es.ugr.siar.ip.desc.Descriptor2MySQL#getTableName()
+   */
+  public String getTableName() {
+    return "`DescMPEG7_CSD`";
+  }
+
+  /* (non-Javadoc)
+   * @see es.ugr.siar.ip.desc.Descriptor2MySQL#getSQLParamNames()
+   */
+  public String[] getSQLParamNames() {
+    String str[] = new String[4];
+    str[0] = "Photo_ID";
+    str[1] = "Version";
+    str[2] = "qLevels";
+    str[3] = "histo";
     return str;
   }
 
@@ -96,24 +107,23 @@ public class MPEG7EdgeHistogramSQL extends MPEG7EdgeHistogram implements Descrip
   public void fromMySQL(int ID, mySQL db) {
     String[] paramName = getSQLParamNames();
     String sql = " SELECT * FROM " + getTableName();
+
     sql += "WHERE `Photo_ID`=" + ID + ";";
     if (db.queryOneRowResult(sql)) {
-      treshold = db.getValueInt(paramName[2]);
-      numBlock = db.getValueInt(paramName[3]);
-      setHisto(db.getBytes(paramName[4]));
+      qLevels = db.getValueInt(paramName[2]);
+      histo = new int[qLevels];
+      setHisto(db.getBytes(paramName[3]));
     }
   }
 
-  /*
+  /* (non-Javadoc)
    * @see es.ugr.siar.ip.desc.Descriptor2MySQL#fromMySQL(java.sql.ResultSet)
    */
   public void fromMySQL(ResultSet result) {
-    String[] paramName = getSQLParamNames();
     try {
       result.next();
-      treshold = result.getInt(paramName[2]);
-      numBlock = result.getInt(paramName[3]);
-      setHisto(result.getBytes(paramName[4]));
+      qLevels = result.getInt(3);
+      setHisto(result.getBytes(4));
     }
     catch (SQLException e) {
       // TODO Auto-generated catch block
@@ -126,8 +136,8 @@ public class MPEG7EdgeHistogramSQL extends MPEG7EdgeHistogram implements Descrip
    * @see es.ugr.siar.ip.desc.Descriptor2MySQL#toMySQL(int, es.ugr.siar.db.mySQL)
    */
   public void toMySQL(int ID, mySQL db) {
-
-    if ( (exist(ID, db, false) && !exist(ID, db, true)) || !exist(ID, db, false)) { //If the ID exist in the database.
+    //If the ID exist in the database but it's a lower version or there is no ID for this desc.
+    if ( (exist(ID, db, false) && !exist(ID, db, true)) || !exist(ID, db, false)) {
       //Obtain the INSERT header
       String sql = replaceHeader();
 
@@ -135,28 +145,18 @@ public class MPEG7EdgeHistogramSQL extends MPEG7EdgeHistogram implements Descrip
       try {
         pstmt.setInt(1, ID);
         pstmt.setFloat(2, version);
-        pstmt.setInt(3, treshold);
-        pstmt.setInt(4, numBlock);
-        pstmt.setBinaryStream(5, new ByteArrayInputStream(getByteHisto()), 80);
+        pstmt.setInt(3, qLevels);
+        byte bHisto[] = new byte[qLevels];
+        for (int i = 0; i < qLevels; i++) {
+          bHisto[i] = (byte) histo[i];
+        }
+        pstmt.setBinaryStream(4, new ByteArrayInputStream(bHisto), 256);
         pstmt.executeUpdate();
       }
       catch (SQLException e) {
         e.printStackTrace();
       }
     }
-  }
-
-  /* (non-Javadoc)
-   * @see es.ugr.siar.ip.desc.Descriptor2MySQL#getSQLParamNames()
-   */
-  public String[] getSQLParamNames() {
-    String str[] = new String[5];
-    str[0] = "Photo_ID";
-    str[1] = "Version";
-    str[2] = "treshold";
-    str[3] = "numBlock";
-    str[4] = "histo";
-    return str;
   }
 
   /* (non-Javadoc)

@@ -1,4 +1,4 @@
-package jmr.descriptor.mpeg7;
+package jmr.initial.db;
 
 import jmr.initial.db.mySQL;
 import java.sql.ResultSet;
@@ -14,7 +14,7 @@ import jmr.initial.db.Descriptor2MySQL;
  * @version 1.0
  */
 
-public class MPEG7HomogeneousTextureSQL extends jmr.descriptor.mpeg7.MPEG7HomogeneousTexture implements Descriptor2MySQL {
+public class MPEG7HomogeneousTextureSQL extends jmr.initial.descriptor.mpeg7.MPEG7HomogeneousTexture implements Descriptor2MySQL {
 
   /**
    * Version of the descriptor:

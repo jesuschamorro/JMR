@@ -116,7 +116,7 @@ public class JMRExtendedBufferedImage extends BufferedImage {
 	}
 
 	/**
-	 * Create a {@link JMRImage} from a file keeping in memory the path of its
+	 * Create a  JMRImage}from a file keeping in memory the path of its
 	 * source filename.
 	 *
 	 * @param 	file
@@ -139,8 +139,8 @@ public class JMRExtendedBufferedImage extends BufferedImage {
 	 * Convert an ImageJMR}with <code>N</code> components in
 	 * <code>N</code> {@link BufferedImage#TYPE_BYTE_GRAY} images.
 	 *
-	 * <p>The values of {@link JMRImage} are scaled using {@link ColorSpaceJMR#getMaxValue(int)} and
-	 * {@link ColorSpaceJMR#getMinValue(int)} to convert them in 8-bit values between [0-255]</p>
+	 * <p>The values of JMRImage are scaled using ColorSpaceJMR#getMaxValue(int) and
+	 * ColorSpaceJMR#getMinValue(int) to convert them in 8-bit values between [0-255]</p>
 	 *
 	 *
 	 * @return an array of {@link BufferedImage} with {@link BufferedImage#TYPE_BYTE_GRAY}
@@ -196,13 +196,13 @@ public class JMRExtendedBufferedImage extends BufferedImage {
 
 
 	/**
-	 * Convert an {@link JMRImage} in a {@link BufferedImage} with values scaled between
+	 * Convert an JMRImage in a {@link BufferedImage} with values scaled between
 	 * <code>[0-255]</code> to fit the {@link BufferedImage#TYPE_3BYTE_BGR} or
 	 * {@link BufferedImage#TYPE_4BYTE_ABGR}.
 	 *
 	 *
-	 * <p>The values of {@link JMRImage} are scaled using {@link ColorSpaceJMR#getMaxValue(int)} and
-	 * {@link ColorSpaceJMR#getMinValue(int)} to convert them in 8-bit values between <code>[0-255]</code>
+	 * <p>The values of JMRImage are scaled using ColorSpaceJMRgetMaxValue and
+	 * ColorSpaceJMR#getMinValue to convert them in 8-bit values between <code>[0-255]</code>
 	 * </p>
 	 *
 	 *
@@ -460,7 +460,7 @@ public class JMRExtendedBufferedImage extends BufferedImage {
 	}
 
 	/**
-	 * Return a String with the most important values of {@link JMRImage}
+	 * Returns a string representation of this image
 	 *
 	 * <p><i>This function is mainly used for debugging and printing</i></p>
 	 */
@@ -469,7 +469,7 @@ public class JMRExtendedBufferedImage extends BufferedImage {
 	}
 
 	/**
-	 * Return a String with all the important values of {@link JMRImage}
+	 * Returns a string representation of this image
 	 *
 	 * <p><i>This function is mainly used for debugging and printing</i></p>
 	 */

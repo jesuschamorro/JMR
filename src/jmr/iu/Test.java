@@ -6,7 +6,7 @@ import java.awt.image.Raster;
 
 import javax.swing.*;
 import jmr.descriptor.Comparator;
-import jmr.descriptor.SingleColorDescriptor;
+import jmr.descriptor.color.SingleColorDescriptor;
 import jmr.grid.SquareGrid;
 import jmr.media.JMRBufferedImage;
 
