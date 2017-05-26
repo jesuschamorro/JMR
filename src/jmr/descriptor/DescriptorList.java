@@ -51,7 +51,7 @@ public class DescriptorList<T> extends MediaDescriptorAdapter<T> implements Seri
      */
     public boolean add(MediaDescriptor<T> descriptor) {
         if (descriptor.getSource() != this.getSource()) {
-            throw new InvalidParameterException("The new descriptor does not share the list media source.");
+            throw new InvalidParameterException("The new descriptor does not share this list media source.");
         }
         return descriptors.add(descriptor);
     }
@@ -69,7 +69,7 @@ public class DescriptorList<T> extends MediaDescriptorAdapter<T> implements Seri
      */
     public void add(int index, MediaDescriptor<T> descriptor) {
         if (descriptor.getSource() != this.getSource()) {
-            throw new InvalidParameterException("The new descriptor does not share the list media source.");
+            throw new InvalidParameterException("The new descriptor does not share this list media source.");
         }
         descriptors.add(index, descriptor);
     }
@@ -87,7 +87,7 @@ public class DescriptorList<T> extends MediaDescriptorAdapter<T> implements Seri
      */
     public MediaDescriptor<T> set(int index, MediaDescriptor<T> descriptor) {
         if (descriptor.getSource() != this.getSource()) {
-            throw new InvalidParameterException("The new descriptor does not share the list media source.");
+            throw new InvalidParameterException("The new descriptor does not share this list media source.");
         }
         return descriptors.set(index, descriptor);
     }
@@ -157,10 +157,29 @@ public class DescriptorList<T> extends MediaDescriptorAdapter<T> implements Seri
     }
     
     /**
-     * Functional (inner) class implementing a comparator between list descriptors
+     * Functional (inner) class implementing a comparator between list
+     * descriptors.
+     * 
+     * The difference between list descriptors is calculated as the Euclidean
+     * distance. Both lists must have the same size and all the descriptors in 
+     * the list must be comparables (at a given position) with a double value 
+     * as result.
      */
     static class DefaultComparator implements Comparator<DescriptorList, Double> {
         @Override
+        /**
+         * Calculates the difference between list descriptors by means a
+         * Euclidean distance. Both lists must have the same size and all the
+         * descriptors in the list must be comparables (at a given position)
+         * with a double value as result.
+         *
+         * @param t the first descriptor list.
+         * @param u the second descriptor list.
+         * @return the difference between descriptors.
+         * @throws InvalidParameterException if the descriptor lists have 
+         * different size, or if the descriptors at a given position are not 
+         * comparables with a double value as result.
+         */
         public Double apply(DescriptorList t, DescriptorList u) {
             if(t.size() != u.size()){
                 throw new InvalidParameterException("The descriptor lists must have the same size.");

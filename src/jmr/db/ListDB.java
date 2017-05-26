@@ -6,7 +6,6 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.TreeSet;
 import jmr.descriptor.DescriptorList;
 import jmr.descriptor.MediaDescriptor;
 import jmr.descriptor.MediaDescriptorFactory;
@@ -54,7 +53,8 @@ public class ListDB<T> implements Serializable{
      * @param record record to be appended to this database
      * @return <tt>true</tt> (as specified by 
      * {@link java.util.Collection#add(java.lang.Object) })
-     * @throws InvalidParameterException
+     * @throws InvalidParameterException if the new record does not share the
+     * database structure.
      */
     public boolean add(Record record) {
         if (!record.isCompatible()) {
@@ -234,7 +234,7 @@ public class ListDB<T> implements Serializable{
     }
     
     /**
-     * Returns the records of this databa ordered on the basis of ist distance
+     * Returns the records of this databa ordered on the basis of its distance
      * to the given query.
      * 
      * @param queryRecord the query record
@@ -336,7 +336,7 @@ public class ListDB<T> implements Serializable{
     /**
      * Inner class representing a single item (record) in the data base. In this
      * case, a record will correspond to the list of descriptors associated to
-     * to the media of the item.
+     * the media of the item.
      *
      */
     public class Record extends DescriptorList<T> implements Comparable<Record>{

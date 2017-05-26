@@ -1,4 +1,4 @@
-package jmr.media;
+package jmr.video;
 
 import java.awt.image.BufferedImage;
 

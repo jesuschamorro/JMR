@@ -1,9 +1,11 @@
 package jmr.descriptor;
 
-import java.lang.reflect.Constructor;
+import java.awt.Dimension;
+import java.awt.image.BufferedImage;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import jmr.grid.Grid;
+import jmr.grid.SquareGrid;
 
 /**
  * Class representing a list of descriptors (one for each tile) associated to a 
@@ -17,12 +19,17 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T>{
     /**
      * Grid associated to this descriptor
      */
-    private final Grid<T> grid;
+    private Grid<T> grid;
     
     /**
      * List of descriptors
      */
     private ArrayList<MediaDescriptor<T>> descriptors;
+    
+    /**
+     * The descriptor class for each tile
+     */
+    private Class tileDescriptorClass;
     
     
     /**
@@ -34,15 +41,32 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T>{
      * constructor with a single parameter of type <code>T</code>.
      * 
      * @param grid the grid associated to this descriptor
-     * @param descriptorClass the descriptor class for each tile
+     * @param tileDescriptorClass the descriptor class for each tile
      */
-    public GriddedDescriptor(Grid<T> grid, Class descriptorClass) {
+    public GriddedDescriptor(Grid<T> grid, Class tileDescriptorClass) {
         super((T)grid.getSource(), new DefaultComparator());
         // The previous call does not initialize the tile descriptors. It will 
         // be done in the following setTilesDescriptors() call
         this.grid = grid;
-        this.setTilesDescriptors(descriptorClass);
+        this.tileDescriptorClass = tileDescriptorClass;
+        this.setTilesDescriptors(tileDescriptorClass);
     }
+    
+    /**
+     * Constructs a new grid descriptor for the particular case of an image (as
+     * media) with a square grid.
+     * 
+     * @param image the source image associated to this descriptor
+     * @param gridSize the size of the square grid, understood as the number of 
+     * titles in the x and y axis.
+     * @param descriptorClass the descriptor class for each tile. It have to 
+     * to provide, at least, a constructor with a single parameter of type
+     * <code>BufferedImage</code>. 
+     */
+    public GriddedDescriptor(BufferedImage image, Dimension gridSize, Class descriptorClass) {               
+        this(new SquareGrid(image, gridSize),descriptorClass);
+    }
+    
     /**
      * First initialization of the descriptor as an empty list of descriptor.
      * 
@@ -68,6 +92,9 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T>{
     private void setTilesDescriptors(Class descriptorClass) {
         T tile;
         MediaDescriptor descriptor;
+        if(!descriptors.isEmpty()){
+            descriptors.clear();
+        }
         for (int i = 0; i < grid.getNumTiles(); i++) {
             tile = (T)grid.getTile(i);            
             descriptor = MediaDescriptorFactory.getInstance(descriptorClass, tile);
@@ -75,6 +102,47 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T>{
         }
     }
     
+    /**
+     * Returns the grid associated to this descriptor.
+     * 
+     * @return the grid associated to this descriptor
+     */
+    public Grid getGrid(){
+        return grid;
+    }
+    
+    /**
+     * Set the grid associated to this descriptor. It implies the source media
+     * and tile descriptors update.
+     * 
+     * @param grid the new grid associated to this descriptor
+     */
+    public void setGrid(Grid<T> grid){
+        this.grid = grid;
+        this.setSource(grid.getSource());
+        this.setTilesDescriptors(tileDescriptorClass);
+    }
+    
+    /**
+     * Returns the tile descriptor class.
+     * 
+     * @return the tile descriptor class
+     */
+    public Class getTileDescriptorClass(){
+        return this.tileDescriptorClass;
+    }
+    
+    /**
+     * Set the tile descriptor class. It implies the tile descriptors update.
+     * 
+     * @param tileDescriptorClass the new tile descriptor class. It have to 
+     * to provide, at least, a constructor with a single parameter of type
+     * <code>T</code>. 
+     */
+    public void setTileDescriptorClass(Class tileDescriptorClass){
+        this.tileDescriptorClass = tileDescriptorClass;
+        this.setTilesDescriptors(tileDescriptorClass);
+    }
     
     /**
      * Returns a string representation of this descriptor

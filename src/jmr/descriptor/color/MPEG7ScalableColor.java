@@ -212,7 +212,7 @@ public class MPEG7ScalableColor implements MediaDescriptor<BufferedImage>, Seria
     /**
      * Quantization matrix. 
      * 
-     * From <a href="www.semanticmetadata.net">Caliph & Emir project</a>
+     * From <a href="www.semanticmetadata.net">Caliph and Emir project</a>
      */
     final private int[][] scalableColorQuantValues
             = {
@@ -626,7 +626,7 @@ public class MPEG7ScalableColor implements MediaDescriptor<BufferedImage>, Seria
      * @param magnitud
      * @param sign 
      */
-    public void setHistoHaar(byte[] magnitud, byte[] sign) {
+    protected void setHistoHaar(byte[] magnitud, byte[] sign) {
         byte tmp = 0;
         if (magnitud.length != sign.length * 8) {
             return;
