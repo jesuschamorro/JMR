@@ -1,6 +1,5 @@
 package jmr.video;
 
-import jmr.video.JMRVideo;
 import java.awt.image.BufferedImage;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.Collection;
  * 
  * @author Jesús Chamorro Martínez (jesus@decsai.ugr.es)
  */
-public class FrameCollection extends ArrayList<BufferedImage> implements JMRVideo{
+public class FrameCollection extends ArrayList<BufferedImage> implements Video{
        
     /**
      * Appends the specified image to the end of this list. The new image must 
@@ -171,5 +170,5 @@ public class FrameCollection extends ArrayList<BufferedImage> implements JMRVide
     public BufferedImage getFrame(int frame_index) {
         return get(frame_index);
     }
-    
+        
 }

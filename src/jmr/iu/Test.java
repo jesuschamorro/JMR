@@ -1,14 +1,15 @@
 package jmr.iu;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
+import java.io.File;
 
 import javax.swing.*;
 import jmr.descriptor.Comparator;
 import jmr.descriptor.color.SingleColorDescriptor;
-import jmr.grid.SquareGrid;
 import jmr.media.JMRBufferedImage;
+import jmr.video.FrameCollection;
+import jmr.video.FrameCollectionIO;
+import jmr.video.KeyFramesDescriptor;
 
 
 public class Test {
@@ -37,9 +38,26 @@ public class Test {
         Comparator<SingleColorDescriptor, Color> c2 = (a,b)->Color.blue;
         d2.setComparator(c2);
         o = d2.compare(d3);
-        System.out.println("Output: " + o + " de tipo " + o.getClass());
+        System.out.println("Output: " + o + " de tipo " + o.getClass());   
         
     }
+    
+    private void TestVideo(){
+        File file = new File("C:\\Users\\Jesús\\Documents\\_JMR_TestImages\\video");
+        FrameCollection fc = FrameCollectionIO.read(file);
+        KeyFramesDescriptor kfd = new KeyFramesDescriptor(fc,jmr.descriptor.color.SingleColorDescriptor.class);
+        System.out.println("KFD: \n"+kfd);
+        
+        file = new File("C:\\Users\\Jesús\\Documents\\_JMR_TestImages\\036.jpg");
+        FrameCollection fc2 = FrameCollectionIO.read(file);
+        KeyFramesDescriptor kfd2 = new KeyFramesDescriptor(fc2,jmr.descriptor.color.SingleColorDescriptor.class);
+        System.out.println("KFD: \n"+kfd2);
+        
+        Double dist = kfd.compare(kfd2);
+        System.out.println(dist);
+        
+    } 
+    
 
     /**
      * Application entry point.

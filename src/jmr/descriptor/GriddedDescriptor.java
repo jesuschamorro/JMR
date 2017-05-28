@@ -29,7 +29,7 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T>{
     /**
      * The descriptor class for each tile
      */
-    private Class tileDescriptorClass;
+    private Class<? extends MediaDescriptor> tileDescriptorClass;
     
     
     /**
@@ -43,7 +43,7 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T>{
      * @param grid the grid associated to this descriptor
      * @param tileDescriptorClass the descriptor class for each tile
      */
-    public GriddedDescriptor(Grid<T> grid, Class tileDescriptorClass) {
+    public GriddedDescriptor(Grid<T> grid, Class<? extends MediaDescriptor> tileDescriptorClass) {
         super((T)grid.getSource(), new DefaultComparator());
         // The previous call does not initialize the tile descriptors. It will 
         // be done in the following setTilesDescriptors() call
@@ -51,6 +51,7 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T>{
         this.tileDescriptorClass = tileDescriptorClass;
         this.setTilesDescriptors(tileDescriptorClass);
     }
+    //Revisar: llamadas a set en código anterior
     
     /**
      * Constructs a new grid descriptor for the particular case of an image (as
@@ -63,7 +64,7 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T>{
      * to provide, at least, a constructor with a single parameter of type
      * <code>BufferedImage</code>. 
      */
-    public GriddedDescriptor(BufferedImage image, Dimension gridSize, Class descriptorClass) {               
+    public GriddedDescriptor(BufferedImage image, Dimension gridSize, Class<? extends MediaDescriptor> descriptorClass) {               
         this(new SquareGrid(image, gridSize),descriptorClass);
     }
     
