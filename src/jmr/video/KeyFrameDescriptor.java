@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.List;
 import jmr.descriptor.Comparator;
 import jmr.descriptor.MediaDescriptor;
 import jmr.descriptor.MediaDescriptorAdapter;
@@ -15,7 +16,7 @@ import jmr.descriptor.color.MPEG7ScalableColor;
  *
  * @author Jesús Chamorro Martínez (jesus@decsai.ugr.es)
  */
-public class KeyFramesDescriptor extends MediaDescriptorAdapter<Video> implements Serializable {
+public class KeyFrameDescriptor extends MediaDescriptorAdapter<Video> implements Serializable {
 
     /**
      * List of keyframe descriptors
@@ -34,7 +35,7 @@ public class KeyFramesDescriptor extends MediaDescriptorAdapter<Video> implement
      * @param keyFrameIterator video iterator which produces the keyframes.
      * @param frameDescriptorClass descriptor class for each keyframe.
      */
-    public KeyFramesDescriptor(Video video, VideoIterator<BufferedImage> keyFrameIterator, Class<? extends MediaDescriptor> frameDescriptorClass) {
+    public KeyFrameDescriptor(Video video, VideoIterator<BufferedImage> keyFrameIterator, Class<? extends MediaDescriptor> frameDescriptorClass) {
         super(video, new DefaultComparator());
         // The previous call does not initialize the keyframe descriptors. It  
         // will be done in the following setKeyFrameDescriptors() call
@@ -48,7 +49,7 @@ public class KeyFramesDescriptor extends MediaDescriptorAdapter<Video> implement
      * @param video the source video.
      * @param frameDescriptorClass descriptor class for each keyframe.
      */
-    public KeyFramesDescriptor(Video video, Class<? extends MediaDescriptor> frameDescriptorClass) {
+    public KeyFrameDescriptor(Video video, Class<? extends MediaDescriptor> frameDescriptorClass) {
         this(video, VideoIterator.getDefault(video), frameDescriptorClass);
     }
 
@@ -59,7 +60,7 @@ public class KeyFramesDescriptor extends MediaDescriptorAdapter<Video> implement
      *
      * @param video the source video.
      */
-    public KeyFramesDescriptor(Video video) {
+    public KeyFrameDescriptor(Video video) {
         this(video, VideoIterator.getDefault(video), DEFAULT_FRAME_DESCRIPTOR);
     }
 
@@ -106,6 +107,15 @@ public class KeyFramesDescriptor extends MediaDescriptorAdapter<Video> implement
     }
     
     /**
+     * Returns the list of key frame descriptors.
+     * 
+     * @return the list of key frame descriptors.
+     */
+    public List getDescriptors(){
+        return java.util.Collections.unmodifiableList(descriptors);
+    }
+    
+    /**
      * Returns a string representation of this descriptor
      * .
      * @return a string representation of this descriptor 
@@ -124,10 +134,10 @@ public class KeyFramesDescriptor extends MediaDescriptorAdapter<Video> implement
      * frame descriptors. As default comparator, the minimun distance between
      * frames is used.
      */
-    static public class DefaultComparator implements Comparator<KeyFramesDescriptor, Double> {
+    static public class DefaultComparator implements Comparator<KeyFrameDescriptor, Double> {
 
         @Override
-        public Double apply(KeyFramesDescriptor t, KeyFramesDescriptor u) {
+        public Double apply(KeyFrameDescriptor t, KeyFrameDescriptor u) {
             Double min_distance = Double.MAX_VALUE;
             try {
                 Double item_distance;

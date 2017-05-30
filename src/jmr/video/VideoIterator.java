@@ -85,7 +85,7 @@ public interface VideoIterator<T> extends Iterator<T>{
             this.source = video;            
             if (video != null) {                
                 index = 0;
-                length = video.getNumFrames();
+                length = video.getNumberOfFrames();
             } else {
                 index = length = 0;
             }

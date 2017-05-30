@@ -9,7 +9,8 @@ import jmr.descriptor.color.SingleColorDescriptor;
 import jmr.media.JMRBufferedImage;
 import jmr.video.FrameCollection;
 import jmr.video.FrameCollectionIO;
-import jmr.video.KeyFramesDescriptor;
+import jmr.video.KeyFrameDescriptor;
+import jmr.video.MinMinComparator;
 
 
 public class Test {
@@ -40,20 +41,30 @@ public class Test {
         o = d2.compare(d3);
         System.out.println("Output: " + o + " de tipo " + o.getClass());   
         
+        TestVideo();
     }
     
     private void TestVideo(){
         File file = new File("C:\\Users\\Jesús\\Documents\\_JMR_TestImages\\video");
         FrameCollection fc = FrameCollectionIO.read(file);
-        KeyFramesDescriptor kfd = new KeyFramesDescriptor(fc,jmr.descriptor.color.SingleColorDescriptor.class);
+        KeyFrameDescriptor kfd = new KeyFrameDescriptor(fc,jmr.descriptor.color.SingleColorDescriptor.class);
+        
+        
+                
         System.out.println("KFD: \n"+kfd);
         
         file = new File("C:\\Users\\Jesús\\Documents\\_JMR_TestImages\\036.jpg");
         FrameCollection fc2 = FrameCollectionIO.read(file);
-        KeyFramesDescriptor kfd2 = new KeyFramesDescriptor(fc2,jmr.descriptor.color.SingleColorDescriptor.class);
+        KeyFrameDescriptor kfd2 = new KeyFrameDescriptor(fc2,jmr.descriptor.color.SingleColorDescriptor.class);
         System.out.println("KFD: \n"+kfd2);
         
         Double dist = kfd.compare(kfd2);
+        System.out.println(dist);
+        
+        
+        Comparator<KeyFrameDescriptor, Double> ckfd = new MinMinComparator();
+        kfd.setComparator(ckfd);
+        dist = kfd.compare(kfd2);
         System.out.println(dist);
         
     } 
