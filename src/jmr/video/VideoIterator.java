@@ -123,9 +123,8 @@ public interface VideoIterator<T> extends Iterator<T>{
         /**
          * Returns the next element in the iteration.
          *
-         * @return the next element in the iteration. The type of the element is
-         * {@link jfi.geometry.Point3D}, where the three components of the color 
-         * are stored.
+         * @return the next element in the iteration. 
+         * 
          * @throws NoSuchElementException if the iteration has no more elements.
          */
         @Override

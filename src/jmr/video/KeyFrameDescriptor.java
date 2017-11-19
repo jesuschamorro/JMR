@@ -68,7 +68,7 @@ public class KeyFrameDescriptor extends MediaDescriptorAdapter<Video> implements
      * First initialization of the descriptor as an empty list of descriptor.
      *
      * Later, the list should be filled in with the descriptors of each tile (by
-     * calling {@link #setFramesDescriptors(java.lang.Class) }).
+     * calling {@link #setKeyFrameDescriptors(java.lang.Class, jmr.video.VideoIterator) }).
      *
      * @param video the media associated to this descriptor
      */

@@ -66,7 +66,7 @@ public class ImagePanel extends javax.swing.JPanel {
     }
     
     /**
-     * Retutns the tip label
+     * Set the tip label
      * 
      * @param label the tip label
      */
@@ -74,11 +74,36 @@ public class ImagePanel extends javax.swing.JPanel {
         this.setToolTipText(label);
     }
     
+    /**
+     * Returns the tip label.
+     * 
+     * @return the tip label.
+     */
+    public final String getLabel(){
+        return this.getToolTipText();
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+        });
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+        //If the tooltip is active, then this panel catch all the mouse events.
+        //The following code is for mouse clicked redispatching to the parent
+        javax.swing.JComponent source = (javax.swing.JComponent) evt.getSource();
+        java.awt.event.MouseEvent parentEvent = 
+                javax.swing.SwingUtilities.convertMouseEvent(source,evt,source.getParent());
+        source.getParent().dispatchEvent(parentEvent);
+    }//GEN-LAST:event_formMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 }
+
