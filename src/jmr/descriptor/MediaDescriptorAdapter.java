@@ -83,7 +83,7 @@ public abstract class MediaDescriptorAdapter<T> implements MediaDescriptor<T>, S
      * Only for serialization tasks. I should not be used in subclasses
      */
     protected MediaDescriptorAdapter(){
-        System.out.println("Serializando: constructor vacio de MediaDescriptorAdapter");
+        System.out.println("Serilazing: empty constructor in MediaDescriptorAdapter");
     }
     
     /**

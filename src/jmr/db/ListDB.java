@@ -1,5 +1,12 @@
 package jmr.db;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.security.InvalidParameterException;
@@ -234,7 +241,7 @@ public class ListDB<T> implements Serializable{
     }
     
     /**
-     * Returns the records of this databa ordered on the basis of its distance
+     * Returns the records of this database ordered on the basis of its distance
      * to the given query.
      * 
      * @param queryRecord the query record
@@ -255,7 +262,19 @@ public class ListDB<T> implements Serializable{
     }
     
     /**
-     * Returns a subset of this databa corresponding to the nearest records to 
+     * Returns the records of this database ordered on the basis of its distance
+     * to the given query.
+     * 
+     * @param queryMedia the query media
+     * @return a list of records ordered by distante to <code>queryRecord</code>
+     */
+    public List<Record> query(T queryMedia){
+        Record queryRecord = new Record(queryMedia);
+        return this.query(queryRecord);       
+    }
+    
+    /**
+     * Returns a subset of this database corresponding to the nearest records to 
      * the given query one. The output is sorted on the basis of the distance 
      * to the query.
      * 
@@ -294,19 +313,33 @@ public class ListDB<T> implements Serializable{
     }
     
     /**
-     * Returns metadata info of the records of this databa ordered on the basis 
-     * of ist distance to the given query.
+     * Returns a subset of this database corresponding to the nearest records to 
+     * the given query one. The output is sorted on the basis of the distance 
+     * to the query.
      * 
-     * The returned info is a list o pairs [distance, source] encapsulated in a 
+     * @param queryMedia the query media
+     * @param size the size of the output subset 
+     * @return the nearest records sorted by distance
+     */
+    public List<Record> query(T queryMedia, int size){
+        Record queryRecord = new Record(queryMedia);
+        return this.query(queryRecord, size);        
+    }
+    
+    /**
+     * Returns the records of this database ordered on the basis of its distance
+     * to the given query. For each record, metadata info about its distance to 
+     * the given query is provided.
+     * 
+     * The returned info is a list o pairs [distance, record] encapsulated in a 
      * {@link jmr.result.ResultMetadata} object, where the result type is a 
      * {@link java.lang.Double} representing the distance to the query, and the
-     * metadata type is a <code>T</code> object representing the source 
-     * associated to that distance.
+     * metadata type is the record associated to that distance.
      * 
      * @param queryRecord the query record
      * @return a list of ordered metadata
      */
-    public List<ResultMetadata<Double,T>> queryMetadata(Record queryRecord){ 
+    public List<ResultMetadata<Double,Record>> queryMetadata(Record queryRecord){ 
         if (!queryRecord.isCompatible()) {
             throw new InvalidParameterException("The query record does not share the data base structure.");
         }
@@ -314,15 +347,54 @@ public class ListDB<T> implements Serializable{
         Object distance;
         for(Record r: database){
             distance = queryRecord.compare(r);
-            output.add(new ResultMetadata(distance, r.getSource()));
+            output.add(new ResultMetadata(distance, r));
         }
         output.sort(null);
         return output;
     }
     
     /**
-     * Returns a string representation of this database
-     * .
+     * Read a serialized <code>ListDB</code> object from a file.
+     *
+     * @param file the file with the serialized <code>ListDB</code> object
+     * @return a new <code>ListDB</code> object with the records stored in the
+     * given file.
+     * 
+     * @throws FileNotFoundException if the file does not exist, is a directory
+     * rather than a regular file, or for some other reason cannot be opened for
+     * reading.
+     * @throws IOException if an I/O error occurs while reading stream header.
+     * @throws ClassNotFoundException if some class of a serialized object
+     * cannot be found.
+     */
+    static public ListDB open(File file) throws FileNotFoundException, 
+            IOException, ClassNotFoundException {
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
+        ListDB database = (ListDB) ois.readObject();
+        ois.close();
+        return database;
+    }
+    
+    /**
+     * Save this <code>ListDB</code> object in a file by means a serialize 
+     * process.
+     * 
+     * @param file the file where this objetc will be serialized.
+     * 
+     * @throws FileNotFoundException if the file does not exist, is a directory
+     * rather than a regular file, or for some other reason cannot be opened for
+     * writing.
+     * @throws IOException if an I/O error occurs while writing stream header.
+     */
+    public void save(File file) throws FileNotFoundException, IOException {
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
+        oos.writeObject(this);
+        oos.close();
+    }
+    
+    /**
+     * Returns a string representation of this database.
+     * 
      * @return a string representation of this database 
      */
     @Override

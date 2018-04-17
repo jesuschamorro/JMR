@@ -59,6 +59,7 @@ public class MPEG7DominantColors implements MediaDescriptor {
      * A vector of <code>MPEG7SingleDominatColor</code>
      */
     private ArrayList<jmr.descriptor.ColorData> dcd;
+
     /**
      * The minimum percentage to consider a cluster as a cluster
      */
@@ -87,7 +88,7 @@ public class MPEG7DominantColors implements MediaDescriptor {
     /**
      * Represents a default value for parameter minPercentage
      */
-    public static float DEFAULT_MIN_PERCENTAGE = 0.02f;
+    public static float DEFAULT_MIN_PERCENTAGE = 0.01f;
 
     private float td = Float.MAX_VALUE;
 
@@ -126,6 +127,14 @@ public class MPEG7DominantColors implements MediaDescriptor {
     this.init(img);
   }
   
+  
+    public float getMinPercentage() {
+        return minPercentage;
+    }
+
+    public void setMinPercentage(float minPercentage) {
+        this.minPercentage = minPercentage;
+    }
   
   /** Compare this <code>MPEG7DominantColors</code> obtect with the
    * <code>MPEG7DominantColors</code> given by parameter

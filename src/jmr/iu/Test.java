@@ -48,8 +48,6 @@ public class Test {
         File file = new File("C:\\Users\\Jesús\\Documents\\_JMR_TestImages\\video");
         FrameCollection fc = FrameCollectionIO.read(file);
         KeyFrameDescriptor kfd = new KeyFrameDescriptor(fc,jmr.descriptor.color.SingleColorDescriptor.class);
-        
-        
                 
         System.out.println("KFD: \n"+kfd);
         
@@ -60,7 +58,6 @@ public class Test {
         
         Double dist = kfd.compare(kfd2);
         System.out.println(dist);
-        
         
         Comparator<KeyFrameDescriptor, Double> ckfd = new MinMinComparator();
         kfd.setComparator(ckfd);
@@ -78,7 +75,7 @@ public class Test {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {                
-                new Test();
+                //new Test();
             }
         });
     }

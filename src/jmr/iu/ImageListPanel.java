@@ -33,7 +33,7 @@ public class ImageListPanel extends javax.swing.JPanel {
     ImageSelectionListener imageSelectionEventListener=null;
     
     /**
-     * Constructs an empty list panel with {@link #DEFAULT_COMMON_SIZE} as 
+     * Constructs an empty list panel with {@link #DEFAULT_IMAGE_VIEW_SIZE} as 
      * default image view size.
      * 
      */
@@ -52,7 +52,7 @@ public class ImageListPanel extends javax.swing.JPanel {
 
     /**
      * Constructs a list panel from the data stored in the given metadata list 
-     * and using {@link #DEFAULT_COMMON_SIZE} as default image view size.
+     * and using {@link #DEFAULT_IMAGE_VIEW_SIZE} as default image view size.
      * 
      * @param list list of {@link jmr.result.ResultMetadata} objetcs. The
      * metadata of each result must be an image (if not, an exception is thrown)
@@ -79,8 +79,7 @@ public class ImageListPanel extends javax.swing.JPanel {
                 internalPanelMouseClicked(evt);
             }
         });
-        
-        
+               
         scrollPanel.setViewportView(internalPanel);
         this.imageViewSize = imageViewSize;
         this.setPreferredSize(new Dimension(imageViewSize.width*5,imageViewSize.height+30));
@@ -130,7 +129,7 @@ public class ImageListPanel extends javax.swing.JPanel {
     
     /**
      * Add a new image to the list with a tip label and using the default size 
-     * {@link #DEFAULT_COMMON_SIZE}.
+     * {@link #DEFAULT_IMAGE_VIEW_SIZE}.
      * 
      * @param image the image to be added
      * @param label the tip label associated to the image
@@ -141,12 +140,54 @@ public class ImageListPanel extends javax.swing.JPanel {
     
     /**
      * Add a new image to the list without tip label and using the default size 
-     * {@link #DEFAULT_COMMON_SIZE}.
+     * {@link #DEFAULT_IMAGE_VIEW_SIZE}.
      * 
      * @param image the image to be added
      */
     public void add(BufferedImage image){
         this.add(image,null,false);
+    }
+    
+    /**
+     * Add a new image to the list at the given position with a tip label. By
+     * means the parameter <code>originalSize</code>, the original size or the
+     * default one can be selected.
+     *
+     * @param image the image to be added
+     * @param index the position at which to insert the component, or
+     * <code>-1</code> to append the component to the end
+     * @param label the tip label associated to the image
+     * @param originalSize if <tt>true</tt>, the original image size is used
+     */
+    public void add(BufferedImage image, int index, String label, boolean originalSize){
+        ImagePanel imgPanel = new ImagePanel(image,label);
+        if(!originalSize) imgPanel.setPreferredSize(imageViewSize);
+        internalPanel.add(imgPanel, index);
+    }
+    
+    /**
+     * Add a new image to the list at the given position with a tip label and
+     * using the default size {@link #DEFAULT_IMAGE_VIEW_SIZE}.
+     *
+     * @param image the image to be added
+     * @param index the position at which to insert the component, or
+     * <code>-1</code> to append the component to the end
+     * @param label the tip label associated to the image
+     */
+    public void add(BufferedImage image, int index, String label) {
+        this.add(image, index, label, false);
+    }
+
+    /**
+     * Add a new image to the list at the given position without tip label and
+     * using the default size {@link #DEFAULT_IMAGE_VIEW_SIZE}.
+     *
+     * @param image the image to be added
+     * @param index the position at which to insert the component, or
+     * <code>-1</code> to append the component to the end
+     */
+    public void add(BufferedImage image, int index) {
+        this.add(image, index, null, false);
     }
     
     /**
