@@ -80,7 +80,7 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T>{
     public void init(T media) {
         descriptors = new ArrayList<>();
         // We also should add to the list the tiles descriptors, but this method
-        // is call from the superclass constructor so, when this code is
+        // is called from the superclass constructor so, when this code is
         // executed, the local member data (used for constructing the tiles 
         // descriptors) are no initialized yet. Thus, after the super() call 
         // in the construtor, we have to initialize the rest of the descriptor.

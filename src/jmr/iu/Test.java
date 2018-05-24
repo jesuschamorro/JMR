@@ -1,11 +1,15 @@
 package jmr.iu;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 
 import javax.swing.*;
 import jmr.descriptor.Comparator;
 import jmr.descriptor.color.SingleColorDescriptor;
+import jmr.descriptor.label.LabelDescriptor;
+import jmr.descriptor.label.MultipleLabelDescriptor;
+import jmr.descriptor.label.SingleLabelDescriptor;
 import jmr.media.JMRBufferedImage;
 import jmr.video.FrameCollection;
 import jmr.video.FrameCollectionIO;
@@ -20,7 +24,11 @@ public class Test {
      * Construct and show the application.
      */
     public Test() {
-        
+        TestLabel();
+    }
+    
+    
+    private void TestColor(){
         JMRBufferedImage img = null;
         SingleColorDescriptor d = new SingleColorDescriptor(img);
         System.out.println("Color: " + d.getColor());
@@ -39,9 +47,7 @@ public class Test {
         Comparator<SingleColorDescriptor, Color> c2 = (a,b)->Color.blue;
         d2.setComparator(c2);
         o = d2.compare(d3);
-        System.out.println("Output: " + o + " de tipo " + o.getClass());   
-        
-        TestVideo();
+        System.out.println("Output: " + o + " de tipo " + o.getClass()); 
     }
     
     private void TestVideo(){
@@ -66,6 +72,36 @@ public class Test {
         
     } 
     
+     private void TestLabel(){
+         
+         BufferedImage img = new BufferedImage(100,100,BufferedImage.TYPE_INT_RGB);
+         
+         SingleLabelDescriptor<BufferedImage> slabel1 = new SingleLabelDescriptor("Hola");
+         SingleLabelDescriptor<BufferedImage> slabel2 = new SingleLabelDescriptor("Adios");
+         System.out.println(slabel1+"\n"+slabel2+"\n Distancia:"+slabel1.compare(slabel2));
+         
+         slabel1 = new SingleLabelDescriptor(img);
+         System.out.println(slabel1+"\n"+slabel2+"\n Distancia:"+slabel1.compare(slabel2));
+         
+         MultipleLabelDescriptor<BufferedImage> mlabel1 = new MultipleLabelDescriptor("Hola","Adios");
+         MultipleLabelDescriptor<BufferedImage> mlabel2 = new MultipleLabelDescriptor("Adios","Hola");
+         System.out.println(mlabel1+"\n"+mlabel2+"\n Distancia:"+mlabel1.compare(mlabel2));         
+         
+         mlabel1 = new MultipleLabelDescriptor(img);
+         System.out.println(mlabel1+"\n"+mlabel2+"\n Distancia:"+mlabel1.compare(mlabel2));  
+         
+         LabelDescriptor<BufferedImage> label1 = new LabelDescriptor(img);
+         LabelDescriptor<BufferedImage> label2 = new LabelDescriptor("Adios");
+         System.out.println(label1+"\n"+label2+"\n Distancia:"+label1.compare(label2));
+         
+         label1.setClassifier(new SingleLabelDescriptor.DefaultClassifier());
+         label1.setSource(img);
+         System.out.println(label1+"\n"+label2+"\n Distancia:"+label1.compare(label2));
+         
+         label1.setClassifier(new MultipleLabelDescriptor.DefaultClassifier());
+         label1.setSource(img);
+         System.out.println(label1+"\n"+label2+"\n Distancia:"+label1.compare(label2));
+     }
 
     /**
      * Application entry point.
@@ -75,7 +111,7 @@ public class Test {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {                
-                //new Test();
+                new Test();
             }
         });
     }
