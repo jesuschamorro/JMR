@@ -24,7 +24,7 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
      * A classifier used for labeling a given media. It uses a standard
      * functional interface, allowing lambda expressions.
      */
-    private Classifier<T, Object> classifier = null;
+    private Classifier<T, ? extends LabeledClassification> classifier = null;
     
     
     /**
@@ -63,7 +63,7 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
         // has not been assigned yet. Therefore, in the following sentences the
         // classifier data member is initialize and then used for obtaining the
         // label of this descriptor
-        this.classifier = checkClassifier(classifier) ? classifier : new DefaultClassifier();
+        this.setClassifier(classifier);
         this.init(media); //Second call, but needed (see init method)
     }   
         
@@ -87,16 +87,8 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
      */
     @Override
     public void init(T media) {
-        if (media != null && classifier != null) {
-            if (classifier.getResultClass() == String.class) {
-                labels = new ArrayList<>();
-                labels.add((String)classifier.apply(media));
-            } else {
-                labels = (List)classifier.apply(media);
-            }
-        } else {
-            labels = null;
-        }
+        labels = media!=null && classifier!=null ? 
+                classifier.apply(media).getLabels() : null;
         // When this method is called from the superclass constructor, the local
         // member data, and particularly the classifier, are not initialized 
         // yet. Thus, in the construction process, the previous code always 
@@ -116,7 +108,7 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
      * @return the number of labels in this descriptor.
      */
     public int size() {
-        return labels.size();
+        return labels!=null ? labels.size() : 0;
     }
     
     /**
@@ -125,7 +117,7 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
      * @return <tt>true</tt> if this descriptor contains no labels.
      */
     public boolean isEmpty() {
-        return labels.isEmpty();
+        return labels!=null ? labels.isEmpty() : true;
     }
     
     /**
@@ -143,12 +135,13 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
      * Set the classifier for this descriptor.
      *
      * @param classifier the new classifier. The result type of the classifier
-     * must be <code>List&lt;String&gt;</code>
+     * must be of type {@link jmr.descriptor.label.LabeledClassification}. If
+     * the given parameter is null, the default clasifier is assigned.
      */
-    public void setClassifier(Classifier classifier){
-        if (checkClassifier(classifier)) {
-            this.classifier = classifier;
-        }
+    public void setClassifier(Classifier<T, ? extends LabeledClassification> classifier) {
+        this.classifier = classifier != null ? classifier : new DefaultClassifier();        
+        // No null classifier is allowed. If the given parameter is null, the 
+        // default one is used.
     }
     
     /**
@@ -169,19 +162,7 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
     public String toString(){
         return this.getClass().getSimpleName()+": "+labels.toString();
     }
-    
-    /**
-     * Checks if the classifier returns a type compatible with this descriptor.
-     *
-     * @param classifier the classifier to be cheched
-     * @return <code>true</code> if the classifier is compatible with this
-     * descriptor; <code>false</code> in other case.
-     */
-    private boolean checkClassifier(Classifier classifier){
-        Class outputClass = classifier.getResultClass();           
-        return outputClass == String.class || List.class.isAssignableFrom(outputClass);
-    }
-      
+          
     /**
      * Functional (inner) class implementing a comparator between single label
      * descriptors. It returns 1.0 if the labels are the same in both
@@ -217,12 +198,20 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
      * implementation labels the media with only one label equals to the
      * (simple) name of its class.
      */
-    static class DefaultClassifier<T> implements Classifier<T, List<String>> {
+    static class DefaultClassifier<T> implements Classifier<T, LabeledClassification> {
         @Override
-        public List<String> apply(T t) {
+        public LabeledClassification apply(T t) {
             ArrayList<String> list = new ArrayList();
             if(t!=null) list.add(t.getClass().getSimpleName());
-            return list;
+            return new LabeledClassification(){
+                public List<String> getLabels() {return list;}
+                public boolean isWeighted() {return false;}
+                public List<Double> getWeights() {return null;}              
+            };
+        }
+        
+        public void aaa(){
+            
         }
     }
 }
