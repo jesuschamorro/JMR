@@ -9,6 +9,7 @@ import jmr.descriptor.Comparator;
 import jmr.descriptor.color.SingleColorDescriptor;
 import jmr.descriptor.label.Classifier;
 import jmr.descriptor.label.LabelDescriptor;
+import jmr.descriptor.label.LabelDescriptor.WeightBasedComparator;
 import jmr.descriptor.label.SingleLabelDescriptor;
 import jmr.media.JMRBufferedImage;
 import jmr.video.FrameCollection;
@@ -80,16 +81,39 @@ public class Test {
          
          BufferedImage img = new BufferedImage(100,100,BufferedImage.TYPE_INT_RGB);
          
-         SingleLabelDescriptor<BufferedImage> slabel1 = new SingleLabelDescriptor("Hola");
-         SingleLabelDescriptor<BufferedImage> slabel2 = new SingleLabelDescriptor("Hola");
-         System.out.println(slabel1+"\n"+slabel2+"\n Distancia:"+slabel1.compare(slabel2));
+//         SingleLabelDescriptor<BufferedImage> slabel1 = new SingleLabelDescriptor("Hola");
+//         SingleLabelDescriptor<BufferedImage> slabel2 = new SingleLabelDescriptor("Hola");
+//         System.out.println(slabel1+"\n"+slabel2+"\n Distancia:"+slabel1.compare(slabel2));
+//         
+//         slabel1 = new SingleLabelDescriptor(img);
+//         System.out.println(slabel1+"\n"+slabel2+"\n Distancia:"+slabel1.compare(slabel2));
          
-         slabel1 = new SingleLabelDescriptor(img);
-         System.out.println(slabel1+"\n"+slabel2+"\n Distancia:"+slabel1.compare(slabel2));
+         LabelDescriptor<BufferedImage> mlabel1 = new LabelDescriptor("Hola","Adios","Casa");
+         LabelDescriptor<BufferedImage> mlabel2 = new LabelDescriptor("Adios","Hola","Casa");         
+         mlabel1.setWeights(1.7,3.0,0.7);
+         mlabel2.setWeights(1.7,1.0,0.7);
+                  
+         System.out.println(mlabel1+"\n"+mlabel2);    
          
-         LabelDescriptor<BufferedImage> mlabel1 = new LabelDescriptor("Hola","Adios");
-         LabelDescriptor<BufferedImage> mlabel2 = new LabelDescriptor("Adios","Hola");
-         System.out.println(mlabel1+"\n"+mlabel2+"\n Distancia:"+mlabel1.compare(mlabel2));         
+         mlabel1.setComparator(new LabelDescriptor.InclusionComparator());
+         System.out.println(" Distancia Inclusion (sin peso):"+mlabel1.compare(mlabel2));          
+         mlabel1.setComparator(new LabelDescriptor.EqualComparator());
+         System.out.println(" Distancia Equal (sin peso):"+mlabel1.compare(mlabel2)); 
+         mlabel1.setComparator(new LabelDescriptor.WeightBasedComparator());
+         System.out.println(" Distancia WEqual (euclídea):"+mlabel1.compare(mlabel2)); 
+         mlabel1.setComparator(new WeightBasedComparator(WeightBasedComparator.TYPE_DISTANCE_AGGREGATOR_MIN));
+         System.out.println(" Distancia WEqual (min):"+mlabel1.compare(mlabel2)); 
+         mlabel1.setComparator(new WeightBasedComparator(WeightBasedComparator.TYPE_DISTANCE_AGGREGATOR_MAX));
+         System.out.println(" Distancia WEqual (max):"+mlabel1.compare(mlabel2)); 
+         mlabel1.setComparator(new WeightBasedComparator(WeightBasedComparator.TYPE_DISTANCE_AGGREGATOR_SUM));
+         System.out.println(" Distancia WEqual: (sum)"+mlabel1.compare(mlabel2));         
+         mlabel1.setComparator(new WeightBasedComparator(WeightBasedComparator.TYPE_DISTANCE_AGGREGATOR_MEAN));
+         System.out.println(" Distancia WEqual (mean):"+mlabel1.compare(mlabel2)); 
+         
+         mlabel1.setComparator(new WeightBasedComparator(WeightBasedComparator.TYPE_DISTANCE_AGGREGATOR_MEAN,true));
+         System.out.println(" Distancia WInclusion (mean):"+mlabel1.compare(mlabel2)); 
+         
+         
          
          mlabel1 = new LabelDescriptor(img);
          System.out.println(mlabel1+"\n"+mlabel2+"\n Distancia:"+mlabel1.compare(mlabel2));  
@@ -97,16 +121,7 @@ public class Test {
          LabelDescriptor<BufferedImage> label1 = new LabelDescriptor(img);
          LabelDescriptor<BufferedImage> label2 = new LabelDescriptor("Adios");
          System.out.println(label1+"\n"+label2+"\n Distancia:"+label1.compare(label2));
-         
-         
-         Classifier<String,Double> c = new SingleLabelDescriptor.DefaultClassifier();
-//         label1.setClassifier(new SingleLabelDescriptor.DefaultClassifier());
-//         label1.setSource(img);
-//         System.out.println(label1+"\n"+label2+"\n Distancia:"+label1.compare(label2));
-//         
-//         label1.setClassifier(new MultipleLabelDescriptor.DefaultClassifier());
-//         label1.setSource(img);
-//         System.out.println(label1+"\n"+label2+"\n Distancia:"+label1.compare(label2));
+                  
      }
 
     /**

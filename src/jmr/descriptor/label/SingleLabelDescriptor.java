@@ -17,50 +17,83 @@ public class SingleLabelDescriptor<T> extends MediaDescriptorAdapter<T> implemen
      */
     private String label;
     /**
+     * Weight associated to this descriptor.
+     */
+    private Double weight;
+    /**
      * A classifier used for labeling a given media. It uses a standard
      * functional interface, allowing lambda expressions.
      */
     private Classifier<T, String> classifier = null;
-     
+    /**
+     * Comparator used by defayult.
+     */
+    static private Comparator DEFAULT_COMPARATOR = new DefaultWeightedComparator();
+    /**
+     * Classifier used by default.
+     */
+    static private Classifier DEFAULT_CLASSIFIER = new DefaultClassifier();
+    /**
+     * The output of the default comparator when the labes are equals.
+     */
+    static private Double DEFAULT_MAX_DIFFERENCE = 1.0;
+    
+
     /**
      * Constructs a single label descriptor using the default classifier to 
-     * label the given image, and set as comparator the default one.
+     * label the given image, and set as comparator the default one. The weight 
+     * is set to 1.0.
      * 
      * @param media the media source
      */
     public SingleLabelDescriptor(T media) {
-        this(media, new DefaultClassifier()); 
+        this(media, DEFAULT_CLASSIFIER); 
     }   
     
     /**
      * Constructs a single label descriptor using the given classifier to label
-     * the given image, and set as comparator the default one.
+     * the given image, and set as comparator the default one. The weight is set 
+     * to 1.0.
      *
      * @param media the media source
      * @param classifier the classifier used for labeling a given media. The
      * result type of the classifier must be <code>String</code>.
      */
     public SingleLabelDescriptor(T media, Classifier classifier) {
-        super(media, new DefaultComparator()); //Implicit call to init 
+        super(media, DEFAULT_COMPARATOR); //Implicit call to init 
         // The previous call does not initialize the label since the classifier
         // has not been assigned yet. Therefore, in the following sentences the
         // classifier data member is initialize and then used for obtaining the
         // label of this descriptor
         this.classifier = classifier;
+        this.weight = 1.0;
         this.init(media); //Second call, but needed (see init method)
-    }   
+    }
     
     /**
      * Constructs a single label descriptor, initializes it with the given 
-     * label and set as comparator and classifier the default ones.
+     * label and weight, and set as comparator and classifier the default ones.
+     * 
+     * @param label the label to be set
+     * @param weight the weight to be set.
+     */
+    public SingleLabelDescriptor(String label, Double weight) {
+        this((T)null); //Default comparator and classifier; null source
+        this.label = label;
+        this.weight = weight;
+    }
+    
+    /**
+     * Constructs a single label descriptor, initializes it with the given 
+     * label and set as comparator and classifier the default ones. The weight
+     * is set to 1.0.
      * 
      * @param label the label to be set
      */
     public SingleLabelDescriptor(String label) {
-        this((T)null); //Default comparator and classifier; null source
-        this.label = label;
+        this(label,1.0);
     }
-        
+    
     /**
      * Initialize the descriptor by using the classifier.
      *
@@ -109,6 +142,26 @@ public class SingleLabelDescriptor<T> extends MediaDescriptorAdapter<T> implemen
         return classifier;
     }
     
+    
+    /**
+     * Set the weight for this descriptor.
+     *
+     * @param weight the new weight. 
+     */
+    public void setWeight(Double weight){
+        this.weight = weight;
+    }
+    
+    /**
+     * Returns the weight of this descriptor. 
+     * 
+     * @return the weight of this descriptor. 
+     */
+    public Double getWeight(){
+        return weight;
+    }
+    
+    
     /**
      * Returns a string representation of this descriptor.
      * 
@@ -121,14 +174,27 @@ public class SingleLabelDescriptor<T> extends MediaDescriptorAdapter<T> implemen
     
     /**
      * Functional (inner) class implementing a comparator between single label
-     * descriptors. It returns 0.0 if the labels are different and 1.0 if they 
+     * descriptors. It returns 1.0 if the labels are different and 0.0 if they 
      * are equals (ignoring upper cases).
      */
-    static class DefaultComparator implements Comparator<SingleLabelDescriptor, Double> {
+    static public class DefaultComparator implements Comparator<SingleLabelDescriptor, Double> {
         @Override
         public Double apply(SingleLabelDescriptor t, SingleLabelDescriptor u) {
             int equal = t.label.compareToIgnoreCase(u.label);
-            return equal == 0 ? 0.0 : 1.0;
+            return equal == 0 ? 0.0 : DEFAULT_MAX_DIFFERENCE;
+        }
+    } 
+    
+    /**
+     * Functional (inner) class implementing a comparator between single label
+     * descriptors. It returns 1.0 if the labels are different and the weight
+     * (positive) difference if they are equals (ignoring upper cases).
+     */
+    static public class DefaultWeightedComparator implements Comparator<SingleLabelDescriptor, Double> {
+        @Override
+        public Double apply(SingleLabelDescriptor t, SingleLabelDescriptor u) {
+            int equal = t.label.compareToIgnoreCase(u.label);
+            return equal == 0 ? Math.abs(t.weight-u.weight) : DEFAULT_MAX_DIFFERENCE;
         }
     }
     
@@ -136,7 +202,7 @@ public class SingleLabelDescriptor<T> extends MediaDescriptorAdapter<T> implemen
      * Functional (inner) class implementing a default classifier. This
      * implementation labels the media by the (simple) name of its class.
      */
-    static public class DefaultClassifier<T> implements Classifier<T, String> {
+    static private class DefaultClassifier<T> implements Classifier<T, String> {
         @Override
         public String apply(T t) {
             return (t!=null) ? t.getClass().getSimpleName() : "";
