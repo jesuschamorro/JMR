@@ -351,8 +351,8 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
     /**
      * Functional (inner) class implementing the weighted comparator between
      * label descriptors. This comparator uses the weights associated to the
-     * labels to return a distance between descriptors. It may test or equality
-     * (by default) or inclusion.
+     * labels to return a distance between descriptors. It tests equality (by
+     * default) or inclusion.
      *
      * The comparator returns Double.POSITIVE_INFINITY if the labels are
      * diferent (in the test based on equality) or if some label is not included
@@ -362,23 +362,23 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
         /**
          * Type of distance aggregation based on the maximum.
          */
-        static public final int TYPE_DISTANCE_AGGREGATOR_MAX = 1;
+        static public final int TYPE_MAX = 1;
         /**
          * Type of distance aggregation based on the minimum.
          */
-        static public final int TYPE_DISTANCE_AGGREGATOR_MIN = 2;
+        static public final int TYPE_MIN = 2;
         /**
          * Type of distance aggregation based on the sum.
          */
-        static public final int TYPE_DISTANCE_AGGREGATOR_SUM = 3;
+        static public final int TYPE_SUM = 3;
         /**
          * Type of distance aggregation based on the mean.
          */
-        static public final int TYPE_DISTANCE_AGGREGATOR_MEAN = 4;
+        static public final int TYPE_MEAN = 4;
         /**
          * Type of distance aggregation based on the euclidean distance.
          */
-        static public final int TYPE_DISTANCE_AGGREGATOR_EUCLIDEAN = 5;
+        static public final int TYPE_EUCLIDEAN = 5;
         /**
          * The tye of aggregation used in this comparator
          */
@@ -408,23 +408,20 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
          */
         public WeightBasedComparator(int type, boolean only_inclusion) {
             switch (type) {
-                case TYPE_DISTANCE_AGGREGATOR_MAX:
+                case TYPE_MAX:
                     op_init = (a) -> a;
                     op_aggregation = (a, b) -> Math.max(a, b);
                     break;
-                case TYPE_DISTANCE_AGGREGATOR_MIN:
+                case TYPE_MIN:
                     op_init = (a) -> a;
                     op_aggregation = (a, b) -> Math.min(a, b);
                     break;
-                case TYPE_DISTANCE_AGGREGATOR_MEAN:
+                case TYPE_SUM:
+                case TYPE_MEAN:
                     op_init = (a) -> a;
                     op_aggregation = (a, b) -> (a + b);
                     break;
-                case TYPE_DISTANCE_AGGREGATOR_SUM:
-                    op_init = (a) -> a;
-                    op_aggregation = (a, b) -> (a + b);
-                    break;
-                case TYPE_DISTANCE_AGGREGATOR_EUCLIDEAN:
+                case TYPE_EUCLIDEAN:
                     op_init = (a) -> (a * a);
                     op_aggregation = (a, b) -> (a + b * b);
                     break;
@@ -451,7 +448,7 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
          * aggregation, and the equality test.
          */
         public WeightBasedComparator() {
-            this(TYPE_DISTANCE_AGGREGATOR_EUCLIDEAN, false);
+            this(TYPE_EUCLIDEAN, false);
         }
 
         /**
@@ -464,17 +461,17 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
         @Override
         public Double apply(LabelDescriptor t, LabelDescriptor u) {
             if(!only_inclusion && t.size() != u.size()){
-                return Double.MAX_VALUE;
+                return Double.POSITIVE_INFINITY;
             }
             // If the size is equal, and the labels are the same, the distance 
             // between t and u will be given by the inclusion of t in u (which 
             // will be the same that the inclusion of u in t). If the labels are
             // different, the inclusion will be Double.POSITIVE_INFINITY
             Double output = t.inclusionDistance(u, op_init, op_aggregation);
-            if (type == TYPE_DISTANCE_AGGREGATOR_MEAN) {
+            if (type == TYPE_MEAN) {
                 return output / t.size();
             }
-            if (type == TYPE_DISTANCE_AGGREGATOR_EUCLIDEAN) {
+            if (type == TYPE_EUCLIDEAN) {
                 return Math.sqrt(output);
             }
             return output;

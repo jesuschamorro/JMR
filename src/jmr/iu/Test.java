@@ -101,16 +101,16 @@ public class Test {
          System.out.println(" Distancia Equal (sin peso):"+mlabel1.compare(mlabel2)); 
          mlabel1.setComparator(new LabelDescriptor.WeightBasedComparator());
          System.out.println(" Distancia WEqual (euclídea):"+mlabel1.compare(mlabel2)); 
-         mlabel1.setComparator(new WeightBasedComparator(WeightBasedComparator.TYPE_DISTANCE_AGGREGATOR_MIN));
+         mlabel1.setComparator(new WeightBasedComparator(WeightBasedComparator.TYPE_MIN));
          System.out.println(" Distancia WEqual (min):"+mlabel1.compare(mlabel2)); 
-         mlabel1.setComparator(new WeightBasedComparator(WeightBasedComparator.TYPE_DISTANCE_AGGREGATOR_MAX));
+         mlabel1.setComparator(new WeightBasedComparator(WeightBasedComparator.TYPE_MAX));
          System.out.println(" Distancia WEqual (max):"+mlabel1.compare(mlabel2)); 
-         mlabel1.setComparator(new WeightBasedComparator(WeightBasedComparator.TYPE_DISTANCE_AGGREGATOR_SUM));
+         mlabel1.setComparator(new WeightBasedComparator(WeightBasedComparator.TYPE_SUM));
          System.out.println(" Distancia WEqual: (sum)"+mlabel1.compare(mlabel2));         
-         mlabel1.setComparator(new WeightBasedComparator(WeightBasedComparator.TYPE_DISTANCE_AGGREGATOR_MEAN));
+         mlabel1.setComparator(new WeightBasedComparator(WeightBasedComparator.TYPE_MEAN));
          System.out.println(" Distancia WEqual (mean):"+mlabel1.compare(mlabel2)); 
          
-         mlabel1.setComparator(new WeightBasedComparator(WeightBasedComparator.TYPE_DISTANCE_AGGREGATOR_MEAN,true));
+         mlabel1.setComparator(new WeightBasedComparator(WeightBasedComparator.TYPE_MEAN,true));
          System.out.println(" Distancia WInclusion (mean):"+mlabel1.compare(mlabel2)); 
          
          
