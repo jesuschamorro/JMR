@@ -425,13 +425,15 @@ public class ListDB<T> implements Serializable{
         
         /**
          * Constructs a record associated to the given media, initializing its
-         * list of descriptors.
+         * list of descriptors. By default, the locator of the media is set to
+         * <tt>null</tt> (meaning tha it not available).
          *
-         * The descriptors will be automatically calculated on the basis of the  
-         * list of descriptor classes provided by the database (each descriptor 
-         * class have to provide, at least, a constructor with a single  
-         * parameter of type <code>T</code>). The comparator will be set to the 
-         * default one.
+         * The descriptors will be automatically calculated on the basis of the
+         * list of descriptor classes provided by the database (each descriptor
+         * class have to provide, at least, a constructor with a single
+         * parameter of type <code>T</code>). If the media is <tt>null</tt>, the
+         * set of descriptors will be set to <tt>null</tt>. The comparator will
+         * be set to the default one.
          *
          * @param media the source media of this record
          */
@@ -439,13 +441,75 @@ public class ListDB<T> implements Serializable{
             super(media);
             this.initDescriptors(descriptorClasses);
         }
-        
+
+        /**
+         * Constructs a record associated to the given media, initializing its
+         * list of descriptors and the media locator. 
+         *
+         * The descriptors will be automatically calculated on the basis of the
+         * list of descriptor classes provided by the database (each descriptor
+         * class have to provide, at least, a constructor with a single
+         * parameter of type <code>T</code>). If the media is <tt>null</tt>, the
+         * set of descriptors will be set to <tt>null</tt>. The comparator will
+         * be set to the default one.
+         *
+         * @param media the source media of this record.
+         * @param locator the media locator of this record.
+         */
         public Record(T media, URL locator) {
             this(media);
             this.locator = locator;
         }
+    
+        /**
+         * Constructs a record with no media associated, initializing its list
+         * of descriptors with the descriptors given by parameter. If the given
+         * descriptors are not compatible with the database, the set of
+         * descriptors of this record is set to <tt>null</tt>. By default, the
+         * locator of the media is set to <tt>null</tt> (meaning tha it not
+         * available).
+         *
+         * @param descriptors set of descriptors compatible with the data base.
+         */
+        public Record(DescriptorList<T> descriptors) {
+            super(null);
+            // Is 'descriptors' compatible with the database?
+            boolean compatible = (descriptors.size() == descriptorClasses.length);
+            for (int i = 0; i < descriptors.size() && compatible; i++) {
+                if (descriptors.get(i).getClass() != descriptorClasses[i]) {
+                    compatible = false;
+                }
+            }
+            // If it is compatible, the given descriptors are added to this 
+            // record
+            if (compatible) {
+                for (int i = 0; i < descriptors.size(); i++) {
+                    this.add(descriptors.get(i));
+                }
+            }
+        }
         
-        public URL getLocator(){
+        /**
+         * Constructs a record with no media associated, initializing its list
+         * of descriptors with the descriptors given by parameter. If the given
+         * descriptors are not compatible with the database, the set of
+         * descriptors of this record is set to <tt>null</tt>. 
+         * 
+         * @param descriptors set of descriptors compatible with the data base.
+         * @param locator the media locator of this record.
+         */
+        public Record(DescriptorList<T> descriptors, URL locator){
+            this(descriptors);
+            this.locator = locator;
+        }
+        
+        /**
+         * Returns the media locator associated to this record (<tt>null</tt> if
+         * not available).
+         *
+         * @return the media locator of this record (null if not available).
+         */
+        public URL getLocator() {
             return locator;
         }
         

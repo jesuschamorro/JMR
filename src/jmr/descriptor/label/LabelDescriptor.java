@@ -280,6 +280,28 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
     }
     
     /**
+     * Returns <tt>true</tt> if at least one label of this descriptor is
+     * included in the descriptor given by parameter.
+     *
+     * @param u the second label descriptor.
+     * @return <tt>true</tt> if the descriptor <tt>t</tt> has at least one label
+     * included in the descriptor <tt>u</tt>, <tt>false</tt> in other case.
+     */
+    public boolean isSoftIncluded(LabelDescriptor u) {
+        int equal;
+        String label_i;
+        for (int i = 0; i < this.size(); i++) {
+            label_i = this.getLabel(i);
+            equal = 1;
+            for (int j = 0; j < u.size(); j++) {
+                equal = label_i.compareToIgnoreCase(u.getLabel(j)); // 0 if equals
+                if(equal==0) return true;
+            }
+        }
+        return false;
+    } 
+     
+    /**
      * Returns a value related to the distance in which the this descriptor is
      * included in the one given by parameter. This method is used in comparator
      * inner classes.
@@ -326,7 +348,7 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
     static public class InclusionComparator implements Comparator<LabelDescriptor, Double> {
         @Override
         public Double apply(LabelDescriptor t, LabelDescriptor u) {
-            return t.isIncluded(u) ? 0.0 : 1.0;
+            return t.isIncluded(u) ? 0.0 : Double.POSITIVE_INFINITY;
         }
     }            
     
@@ -342,9 +364,9 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
             // If the number of labels is not the same, the descriptors are 
             // assumed to be different
             if(t.size() != u.size()){
-                return 1.0;
+                return Double.POSITIVE_INFINITY;
             }                         
-            return (t.isIncluded(u) && u.isIncluded(t)) ? 0.0 : 1.0;            
+            return (t.isIncluded(u) && u.isIncluded(t)) ? 0.0 : Double.POSITIVE_INFINITY;            
         }
     }
      
@@ -368,17 +390,13 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
          */
         static public final int TYPE_MIN = 2;
         /**
-         * Type of distance aggregation based on the sum.
-         */
-        static public final int TYPE_SUM = 3;
-        /**
          * Type of distance aggregation based on the mean.
          */
-        static public final int TYPE_MEAN = 4;
+        static public final int TYPE_MEAN = 3;
         /**
          * Type of distance aggregation based on the euclidean distance.
          */
-        static public final int TYPE_EUCLIDEAN = 5;
+        static public final int TYPE_EUCLIDEAN = 4;
         /**
          * The tye of aggregation used in this comparator
          */
@@ -416,7 +434,6 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
                     op_init = (a) -> a;
                     op_aggregation = (a, b) -> Math.min(a, b);
                     break;
-                case TYPE_SUM:
                 case TYPE_MEAN:
                     op_init = (a) -> a;
                     op_aggregation = (a, b) -> (a + b);

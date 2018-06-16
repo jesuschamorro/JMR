@@ -89,24 +89,25 @@ public class Test {
 //         System.out.println(slabel1+"\n"+slabel2+"\n Distancia:"+slabel1.compare(slabel2));
          
          LabelDescriptor<BufferedImage> mlabel1 = new LabelDescriptor("Hola","Adios","Casa");
-         LabelDescriptor<BufferedImage> mlabel2 = new LabelDescriptor("Adios","Hola","Casa");         
+         LabelDescriptor<BufferedImage> mlabel2 = new LabelDescriptor("Adios","Hola","Casa");
+         LabelDescriptor<BufferedImage> mlabel3 = new LabelDescriptor("Hola","Salta");
          mlabel1.setWeights(1.7,3.0,0.7);
          mlabel2.setWeights(1.7,1.0,0.7);
                   
          System.out.println(mlabel1+"\n"+mlabel2);    
          
+         System.out.println("SoftIncluded: "+mlabel1.isSoftIncluded(mlabel3));
+         
          mlabel1.setComparator(new LabelDescriptor.InclusionComparator());
          System.out.println(" Distancia Inclusion (sin peso):"+mlabel1.compare(mlabel2));          
          mlabel1.setComparator(new LabelDescriptor.EqualComparator());
          System.out.println(" Distancia Equal (sin peso):"+mlabel1.compare(mlabel2)); 
-         mlabel1.setComparator(new LabelDescriptor.WeightBasedComparator());
+         mlabel1.setComparator(new LabelDescriptor.WeightBasedComparator());  // TYPE_EUCLIDEAN
          System.out.println(" Distancia WEqual (euclídea):"+mlabel1.compare(mlabel2)); 
          mlabel1.setComparator(new WeightBasedComparator(WeightBasedComparator.TYPE_MIN));
          System.out.println(" Distancia WEqual (min):"+mlabel1.compare(mlabel2)); 
          mlabel1.setComparator(new WeightBasedComparator(WeightBasedComparator.TYPE_MAX));
          System.out.println(" Distancia WEqual (max):"+mlabel1.compare(mlabel2)); 
-         mlabel1.setComparator(new WeightBasedComparator(WeightBasedComparator.TYPE_SUM));
-         System.out.println(" Distancia WEqual: (sum)"+mlabel1.compare(mlabel2));         
          mlabel1.setComparator(new WeightBasedComparator(WeightBasedComparator.TYPE_MEAN));
          System.out.println(" Distancia WEqual (mean):"+mlabel1.compare(mlabel2)); 
          
