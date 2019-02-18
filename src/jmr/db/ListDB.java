@@ -565,8 +565,12 @@ public class ListDB<T> implements Serializable{
             if (orderReference == null) {
                 return 0;
             }
-            Double d1 = this.compare(orderReference);
-            Double d2 = o.compare(orderReference);
+            //Double d1 = this.compare(orderReference);
+            //Double d2 = o.compare(orderReference);
+            
+            Double d1 = orderReference.compare(this);
+            Double d2 = orderReference.compare(o);
+            
             return d1.compareTo(d2);
         }
     } // end inner class

@@ -146,6 +146,27 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T>{
     }
     
     /**
+     * Returns the descriptor of the index-th tile.
+     * 
+     * @param index index ot the tile}
+     * @return the descriptor of the index-th tile.
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     */
+    public MediaDescriptor<T> getTileDescriptor(int index){
+        return descriptors.get(index);
+    }
+    
+    /**
+     * Returns the number of tiles in this grid descriptor.
+     * 
+     * @return the number of tiles in this grid descriptor
+     */
+    public int getNumTiles(){
+        return grid.getNumTiles();
+    }
+    
+    
+    /**
      * Returns a string representation of this descriptor
      * .
      * @return a string representation of this descriptor 

@@ -56,8 +56,8 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
         // Particular case. If a new object is constructed by passing a single 
         // String, this constructor is called instead of the specific one for 
         // String type. Only works as expected if the 'new' operation is made 
-        // by indicating explicitly the type (new MultipleLabelDescriptor<T>),
-        // but probably this will no be the case. In order to avoid confusing 
+        // by indicating explicitly the type (new LabelDescriptor<T>), but
+        // probably this will no be the case. In order to avoid confusing 
         // results, this particular case is considered
         if(media!=null && media.getClass()==String.class){
             setSource(null); // Source and labels are set to null, but not the 
@@ -179,7 +179,7 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
      * @return the weight at the specified position in this descriptor
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
-    private Double getWeight(int index) {
+    public Double getWeight(int index) {
         return this.weights.get(index);
     }
      
@@ -302,7 +302,7 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
     } 
      
     /**
-     * Returns a value related to the distance in which the this descriptor is
+     * Returns a value related to the distance in which this descriptor is
      * included in the one given by parameter. This method is used in comparator
      * inner classes.
      *
@@ -461,7 +461,7 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
         
         /**
          * Constructs a new comparator using by default the
-         * {@link #TYPE_DISTANCE_AGGREGATOR_EUCLIDEAN} type for distance
+         * {@link #TYPE_EUCLIDEAN} type for distance
          * aggregation, and the equality test.
          */
         public WeightBasedComparator() {

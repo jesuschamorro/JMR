@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 /**
  * Represents a classifier for given media. This is a specialization of
- * {@link Function}.
+ * {@link java.util.function.Function}.
  *
  * @param <T> the type of the media to be classified
  * @param <R> the type of the result
