@@ -255,7 +255,7 @@ public class MPEG7ScalableColor implements MediaDescriptor<BufferedImage>, Seria
      * 
      * @param image the source image
      */
-    private void initHistogram(JMRExtendedBufferedImage image){
+    protected void initHistogram(JMRExtendedBufferedImage image){
         int wImg = image.getWidth();
         int hImg = image.getHeight();
         Raster imRst = image.getRaster();
@@ -280,7 +280,7 @@ public class MPEG7ScalableColor implements MediaDescriptor<BufferedImage>, Seria
     /**
      * Transform the histogram from a matrix structure to a vector structure 
      */
-     private int[] histoMx2histoVec(int[][][] histoMx) {
+     protected int[] histoMx2histoVec(int[][][] histoMx) {
         int[] histoVec = new int[H_BINS * V_BINS * S_BINS];
         int count = 0;
         for (int k = 0; k < V_BINS; k++) {
@@ -300,7 +300,7 @@ public class MPEG7ScalableColor implements MediaDescriptor<BufferedImage>, Seria
      * @param aHist the source histogram
      * @return the quantized histogram
      */
-    private int[] QuantizeHistogram(int[] aHist) {
+    protected int[] QuantizeHistogram(int[] aHist) {
         int sumPixels = 0;
         for (int i = 0; i < aHist.length; i++) {
             sumPixels += aHist[i];
@@ -347,7 +347,7 @@ public class MPEG7ScalableColor implements MediaDescriptor<BufferedImage>, Seria
      * @param	aHist 256-bin histogram (16H*4S*4V)
      * @return	the histogram after haar tranform and before quantification.
      */
-    private int[] HaarTransform(int[] aHist) {
+    protected int[] HaarTransform(int[] aHist) {
         // Table for sorting histogram indexes in Harr transform.
         int[] sorttab = new int[]{
             0, 4, 8, 12, 32, 36, 40, 44, 128, 132, 136, 140, 160, 164, 168, 172,

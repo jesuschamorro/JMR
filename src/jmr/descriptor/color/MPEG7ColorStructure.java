@@ -121,7 +121,7 @@ public class MPEG7ColorStructure implements MediaDescriptor<BufferedImage>, Seri
      * Initializes the quantization level taking into account that the valid
      * values are 32, 64, 128 or 256.
      */
-    private void setLevels(int qLevels) {
+    protected void setLevels(int qLevels) {
         if (qLevels <= 32) {
             this.qLevels = 32;
         } else if (qLevels <= 64) {
@@ -260,7 +260,7 @@ public class MPEG7ColorStructure implements MediaDescriptor<BufferedImage>, Seri
      * [0,qLevels] This matrix is transposed. It is in the form :
      * imgQuant[height][width].
      */
-    private byte[][] quantHMMDImage(JMRExtendedBufferedImage imSrc) {
+    protected byte[][] quantHMMDImage(JMRExtendedBufferedImage imSrc) {
         //Source image variable
         int wImg = imSrc.getWidth();
         int hImg = imSrc.getHeight();
@@ -312,7 +312,7 @@ public class MPEG7ColorStructure implements MediaDescriptor<BufferedImage>, Seri
      * @param hImg height of the image
      * @return	a {@link #qLevels} histograms
      */
-    private float[] structuredHisto(byte[][] imQ, int wImg, int hImg) {
+    protected float[] structuredHisto(byte[][] imQ, int wImg, int hImg) {
         int m = 0;
         double hw = Math.sqrt(hImg * wImg);
         double p = Math.floor(Math.log(hw) / Math.log(2) - 7.5); //Formula by Manjunath2002
@@ -391,7 +391,7 @@ public class MPEG7ColorStructure implements MediaDescriptor<BufferedImage>, Seri
      * containing values between [0-1]
      * @return	a {@link #qLevels} uniform histograms.
      */
-    private int[] reQuantization(float[] colorHistogramTemp) {
+    protected int[] reQuantization(float[] colorHistogramTemp) {
         int[] uniformCSD = new int[colorHistogramTemp.length];
         for (int i = 0; i < colorHistogramTemp.length; i++) {
             uniformCSD[i] = quantFunc((double) colorHistogramTemp[i]);
