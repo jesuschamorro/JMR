@@ -21,8 +21,11 @@ import jmr.tools.JMRImageTools;
  * @author Jose Manuel Soto Hidalgo (jmsoto@uco.es)
  * @author Jesús Chamorro Martínez (jesus@decsai.ugr.es)
  */
-public class MPEG7DominantColors implements MediaDescriptor {
-
+public class MPEG7DominantColors implements MediaDescriptor<BufferedImage> {
+    /**
+     * The source media of this descriptor
+     */
+    protected transient BufferedImage source = null;
     /**
      * A vector of <code>MPEG7SingleDominatColor</code>
      */
@@ -124,9 +127,31 @@ public class MPEG7DominantColors implements MediaDescriptor {
    */
   public MPEG7DominantColors(BufferedImage img) {
     this();
+    this.source = img;
     this.init(img);
   }
   
+  /**
+     * Returns the media source associated to this descriptor
+     *
+     * @return the media source
+     */
+    @Override
+    final public BufferedImage getSource() {
+        return source;
+    }
+  
+    /**
+     * Set the media source of this descriptor and updates it on the basis
+     * of the new data.
+     * 
+     * @param image the media source
+     */
+    @Override
+    public void setSource(BufferedImage image) {
+        this.source = image;
+        init(image);
+    }
   
     public float getMinPercentage() {
         return minPercentage;
@@ -204,14 +229,14 @@ public class MPEG7DominantColors implements MediaDescriptor {
 	 * @param media
 	 *            The media from which the descriptor is calculated
 	 */
-    @Override
-	public void init(Object media) {
-		// The MPEG7DominantColors only can be calculated from
-		// JMRExtendedBufferedImage
-		if (media instanceof JMRExtendedBufferedImage) {
-			init((JMRExtendedBufferedImage) media);
-		}
-	}
+//    @Override
+//	public void init(Object media) {
+//		// The MPEG7DominantColors only can be calculated from
+//		// JMRExtendedBufferedImage
+//		if (media instanceof JMRExtendedBufferedImage) {
+//			init((JMRExtendedBufferedImage) media);
+//		}
+//	}
 	
 
 	/**
@@ -237,6 +262,7 @@ public class MPEG7DominantColors implements MediaDescriptor {
 	}
 
         
+    @Override
         public void init(BufferedImage img) {		
             JMRExtendedBufferedImage imgJMR = new JMRExtendedBufferedImage(img);
             this.init(imgJMR);

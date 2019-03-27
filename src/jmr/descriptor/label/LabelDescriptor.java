@@ -1,5 +1,6 @@
 package jmr.descriptor.label;
 
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
         
     /**
      * Constructs a multiple label descriptor using the default classifier to 
-     * label the given image, and set as comparator the default one.
+     * label the given media, and set as comparator the default one.
      * 
      * @param media the media source
      */
@@ -100,6 +101,7 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
         this.labels.add(0,label);
         this.weights = null;
     }
+    
     
     /**
      * Initialize the descriptor by using the classifier.
@@ -180,7 +182,7 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
     public Double getWeight(int index) {
-        return this.weights.get(index);
+        return weights!=null ? this.weights.get(index) : null;
     }
      
     /**
@@ -251,9 +253,24 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
      */
     @Override
     public String toString(){
-        return this.getClass().getSimpleName()+": "+labels.toString();
+        return weights==null ? labels.toString() : toStringWeighted();
     }
        
+    /**
+     * Returns a string representation of this descriptor with both the labels
+     * and the weights.
+     *
+     * @return a string representation of this descriptor
+     */
+    private String toStringWeighted(){
+        String output = "[";
+        for(int i=0; i<size(); i++){
+            output += "("+labels.get(i)+","+weights.get(i)+")"; 
+        }
+        
+        return output+"]";
+    }
+    
     /**
      * Returns <tt>true</tt> if the labels of this descriptor are included in
      * the one given by parameter.
@@ -354,9 +371,9 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
     
     /**
      * Functional (inner) class implementing the equal comparator between label
-     * descriptors. It returns 1.0 if the labels are the same in both
-     * descriptors without repetitions (ignoring upper cases and position), 0.0
-     * in other case.
+     * descriptors. It returns 0.0 if the labels are the same in both
+     * descriptors without repetitions (ignoring upper cases and position),
+     * {@link java.lang.Double.POSITIVE_INFINITY} in other case.
      */
     static public class EqualComparator implements Comparator<LabelDescriptor, Double> {
         @Override
@@ -370,6 +387,19 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
         }
     }
      
+    /**
+     * Functional (inner) class implementing the 'soft' equal comparator between
+     * label descriptors. It returns 0.0 if the labels of one descriptor are
+     * included in the other, or viceversa (ignoring upper cases and position),
+     * {@link java.lang.Double.POSITIVE_INFINITY} in other case.
+     */
+    static public class SoftEqualComparator implements Comparator<LabelDescriptor, Double> {
+        @Override
+        public Double apply(LabelDescriptor t, LabelDescriptor u) {                      
+            return (t.isIncluded(u) || u.isIncluded(t)) ? 0.0 : Double.POSITIVE_INFINITY;            
+        }
+    }
+    
     /**
      * Functional (inner) class implementing the weighted comparator between
      * label descriptors. This comparator uses the weights associated to the
@@ -510,6 +540,39 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
                 public boolean isWeighted() {return false;}
                 public List<Double> getWeights() {return null;}              
             };
+        }
+    }
+    
+    /**
+     * Particular case of a {@link jmr.descriptor.label.LabelDescriptor} when
+     * the media is a {@link java.awt.image.BufferedImage}. Although the
+     * standard <code>LabelDescriptor</code> could be used, sometimes it is
+     * useful a specific class for a given type (for example, when the
+     * {@link jmr.descriptor.MediaDescriptorFactory} class is used for building
+     * objetcs -as in the {@link jmr.descriptor.GriddedDescriptor} descriptor-)
+     */
+    static public class ImageLabelDescriptor extends LabelDescriptor<BufferedImage> {
+
+        /**
+         * Constructs a multiple label descriptor using the default classifier
+         * to label the given image, and set as comparator the default one.
+         *
+         * @param img the image source
+         */
+        public ImageLabelDescriptor(BufferedImage img) {
+            super(img);
+        }
+
+        /**
+         * Constructs a multiple label descriptor, initializes it with the given
+         * labels and set as comparator and classifier the default ones. No
+         * weights are set by default.
+         *
+         * @param label the first label of this descriptor.
+         * @param labels the second and following labels of this descriptor.
+         */
+        public ImageLabelDescriptor(String label, String... labels) {
+            super(label, labels);
         }
     }
 }

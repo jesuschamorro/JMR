@@ -191,6 +191,17 @@ public class ImageListPanel extends javax.swing.JPanel {
     }
     
     /**
+     * Removes the n-th image of this panel.
+     * 
+     * @param index index of the image to be removed.
+     * @exception  ArrayIndexOutOfBoundsException if the n<sup>th</sup> image 
+     * does not exist.
+     */
+    public void removeImage(int index){
+        internalPanel.remove(index);
+    }
+    
+    /**
      * Returns the n-th image of this panel.
      * 
      * @param index index of the element to return.

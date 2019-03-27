@@ -426,7 +426,7 @@ public class ListDB<T> implements Serializable{
         /**
          * Constructs a record associated to the given media, initializing its
          * list of descriptors. By default, the locator of the media is set to
-         * <tt>null</tt> (meaning tha it not available).
+         * <tt>null</tt> (meaning that it is not available).
          *
          * The descriptors will be automatically calculated on the basis of the
          * list of descriptor classes provided by the database (each descriptor
@@ -440,6 +440,14 @@ public class ListDB<T> implements Serializable{
         public Record(T media) {
             super(media);
             this.initDescriptors(descriptorClasses);
+            //The source is un-referenced in order to free memory
+//            this.source = null;
+//            for (int i = 0; i < this.size(); i++) {
+//                try {
+//                    this.get(i).setSource(null);
+//                } catch (Exception ex) {
+//                }
+//            }            
         }
 
         /**

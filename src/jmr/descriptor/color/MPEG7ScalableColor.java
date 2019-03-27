@@ -62,38 +62,38 @@ public class MPEG7ScalableColor implements MediaDescriptor<BufferedImage>, Seria
     /**
      * Histogram representing this descriptor
      */
-    private int[] histoHaar = null;
+    protected int[] histoHaar = null;
     /**
      * Number of bins on the hue component
      */
-    final private int H_BINS = 16;
+    final protected int H_BINS = 16;
     /**
      * Number of bins on the saturation component
      */
-    final private int S_BINS = 4;
+    final protected int S_BINS = 4;
     /**
      * Number of bins on the intensity component
      */
-    final private int V_BINS = 4;
+    final protected int V_BINS = 4;
     /**
      * Scaling factor to transform a hue value into a bin index. In the case of
      * this descriptor, based on the HSV color space, this factor is calculated
      * as (360+epsilon)/{@link #H_BINS}
      * 
      */
-    final private float H_SCALE = (360.0f + 1.0f) / (float)H_BINS;
+    final protected float H_SCALE = (360.0f + 1.0f) / (float)H_BINS;
     /**
      * Scaling factor to transform a saturation value into a bin index. In the
      * case of this descriptor, based on the HSV color space, this factor is
      * calculated as (1+epsilon)/{@link #S_BINS}
      */
-    final private float S_SCALE = (1.0f + 1.0f/255.0f) / (float)S_BINS;
+    final protected float S_SCALE = (1.0f + 1.0f/255.0f) / (float)S_BINS;
     /**
      * Scaling factor to transform a intensity value into a bin index. In the
      * case of this descriptor, based on the HSV color space, this factor is
      * calculated as (1+epsilon)/{@link #V_BINS}
      */
-    final private float V_SCALE = (1.0f + 1.0f/255.0f) / (float)V_BINS;
+    final protected float V_SCALE = (1.0f + 1.0f/255.0f) / (float)V_BINS;
 
     
     /**
@@ -342,7 +342,7 @@ public class MPEG7ScalableColor implements MediaDescriptor<BufferedImage>, Seria
     /**
      * Haar transform.
      * 
-     * From <a href="www.semanticmetadata.net">Caliph & Emir project</a>
+     * From <a href="www.semanticmetadata.net">Caliph-Emir project</a>
      *
      * @param	aHist 256-bin histogram (16H*4S*4V)
      * @return	the histogram after haar tranform and before quantification.
@@ -578,7 +578,7 @@ public class MPEG7ScalableColor implements MediaDescriptor<BufferedImage>, Seria
      * @param imSrc source image
      * @return a new image in the the colos space of this descriptor
      */
-    private JMRExtendedBufferedImage convertImg(JMRExtendedBufferedImage imSrc) {
+    protected JMRExtendedBufferedImage convertImg(JMRExtendedBufferedImage imSrc) {
         return ColorConvertTools.colorConvertOp(imSrc, ColorSpaceJMR.getInstance(COLOR_SPACE));
     }
     

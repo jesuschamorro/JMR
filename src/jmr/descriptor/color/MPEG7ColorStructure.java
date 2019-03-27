@@ -251,11 +251,12 @@ public class MPEG7ColorStructure implements MediaDescriptor<BufferedImage>, Seri
      * Convert (and quantize) the image to the HMMD color space.
      *
      * It first look in which subspace a HMMD value is by looking at the DIFF
-     * component. Then it used the {@link #quantTable} to obtain the bin value
-     * for HUE and SUM and finally each bins value for each component is merge
-     * to be put in the qLevels quantification.
+     * component. Then it used the {@link #QUANTIZATION_TABLE} to obtain the bin
+     * value for HUE and SUM and finally each bins value for each component is
+     * merge to be put in the qLevels quantification.
      *
-     * @param imSrc an image in the HMMD Color Space {@link ColorSpaceHMMD}
+     * @param imSrc an image in the HMMD Color Space
+     * {@link jmr.colorspace.ColorSpaceHMMD}
      * @return	a byte matrix representing the quantifized values between
      * [0,qLevels] This matrix is transposed. It is in the form :
      * imgQuant[height][width].
@@ -385,7 +386,7 @@ public class MPEG7ColorStructure implements MediaDescriptor<BufferedImage>, Seri
     }
 
     /**
-     * Re-quantize the histogram (following Caliph & Emir code).
+     * Re-quantize the histogram (following Caliph-Emir code).
      *
      * @param	colorHistogramTemp a {@link #qLevels} non uniform CSD histograms
      * containing values between [0-1]
@@ -435,7 +436,7 @@ public class MPEG7ColorStructure implements MediaDescriptor<BufferedImage>, Seri
      * @param qSizeDst the new size
      * @return the resized descriptor
      */
-    private static int[] resizeCSD(MPEG7ColorStructure c, int qSizeDst) {
+    protected static int[] resizeCSD(MPEG7ColorStructure c, int qSizeDst) {
         int qSizeSrc = c.getQuantLevels();
         int[] dstHisto = new int[qSizeDst];
         int[] srcHisto = c.histo;
@@ -528,7 +529,7 @@ public class MPEG7ColorStructure implements MediaDescriptor<BufferedImage>, Seri
      * @param imSrc source image
      * @return a new image in the the colos space of this descriptor
      */
-    private JMRExtendedBufferedImage convertImg(JMRExtendedBufferedImage imSrc) {
+    protected JMRExtendedBufferedImage convertImg(JMRExtendedBufferedImage imSrc) {
         return ColorConvertTools.colorConvertOp(imSrc, ColorSpaceJMR.getInstance(COLOR_SPACE));
     }
 
