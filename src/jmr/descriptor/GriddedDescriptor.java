@@ -2,6 +2,7 @@ package jmr.descriptor;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import jmr.grid.Grid;
@@ -15,7 +16,7 @@ import jmr.grid.SquareGrid;
  * 
  * @author Jesús Chamorro Martínez (jesus@decsai.ugr.es)
  */
-public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T>{    
+public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T> implements Serializable{    
     /**
      * Grid associated to this descriptor
      */
@@ -25,13 +26,23 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T>{
      * List of descriptors
      */
     private ArrayList<MediaDescriptor<T>> descriptors;
-    
+
     /**
      * The descriptor class for each tile
      */
     private Class<? extends MediaDescriptor> tileDescriptorClass;
     
+    /**
+     * Default grid size.
+     */
+    private static Dimension DEFAULT_GRID_SIZE = new Dimension(2, 2);
     
+    /**
+     * Default descriptor class for each tile.
+     */
+    private static Class DEFAULT_TILE_DESCRIPTOR_CLASS
+            = jmr.descriptor.color.MPEG7ScalableColor.class;
+
     /**
      * Constructs a new descriptor using the given grid (and its media) where
      * each tile is described by means of a descriptor of the class 
@@ -66,6 +77,18 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T>{
      */
     public GriddedDescriptor(BufferedImage image, Dimension gridSize, Class<? extends MediaDescriptor> descriptorClass) {               
         this(new SquareGrid(image, gridSize),descriptorClass);
+    }
+    
+    /**
+     * Constructs a new grid descriptor for the particular case of an image (as
+     * media) with a square grid using the default grid size
+     * {@link #DEFAULT_GRID_SIZE} and the default descriptor class for each tile
+     * {@link #DEFAULT_CLASS_TILE_DESCRIPTOR}.
+     *
+     * @param image the source image associated to this descriptor.
+     */
+    public GriddedDescriptor(BufferedImage image) {
+        this(image, DEFAULT_GRID_SIZE, DEFAULT_TILE_DESCRIPTOR_CLASS);
     }
     
     /**
@@ -165,6 +188,39 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T>{
         return grid.getNumTiles();
     }
     
+    /**
+     * Set the default grid size for this class. This grid size is used when a
+     * specific one is not provided in the object construction.
+     *
+     * @param gridSize the new grid dimension. 
+     */
+    static public void setDefaultGridSize(Dimension gridSize) {
+        if (gridSize != null) {
+            DEFAULT_GRID_SIZE = gridSize;
+        }
+    }
+    
+    /**
+     * Returns the default grid size for this class. This grid size is used when 
+     * a specific one is not provided in the object construction.
+     */
+    static public Dimension getDefaultGridSize() {
+        return DEFAULT_GRID_SIZE;
+    }
+    
+    /**
+     * Set the default descriptor class for each tile. This classe is used when
+     * a specific one is not provided in the object construction.
+     *
+     * @param descriptorClass the default descriptor class for each tile. It
+     * have to provide, at least, a constructor with a single parameter of type
+     * <code>BufferedImage</code>.
+     */
+    static public void setDefaultTileDescriptorClass(Class<? extends MediaDescriptor> descriptorClass) {
+        if (descriptorClass != null) {
+            DEFAULT_TILE_DESCRIPTOR_CLASS = descriptorClass;
+        }
+    }
     
     /**
      * Returns a string representation of this descriptor

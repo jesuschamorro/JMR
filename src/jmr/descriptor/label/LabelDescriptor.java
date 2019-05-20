@@ -32,7 +32,7 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
      * A classifier used for labeling a given media. It uses a standard
      * functional interface, allowing lambda expressions.
      */
-    private Classifier<T, ? extends LabeledClassification> classifier = null;
+    private transient Classifier<T, ? extends LabeledClassification> classifier = null;
     /**
      * Comparator used by default.
      */
@@ -293,7 +293,7 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
                 return false; //Same label not found
             }
         }
-        return true;
+        return true; //If this descriptor has not labels, it is included in u
     }
     
     /**
@@ -307,9 +307,9 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
     public boolean isSoftIncluded(LabelDescriptor u) {
         int equal;
         String label_i;
+        if(this.size()==0) return true; //If this descriptor has not labels, it is included in u
         for (int i = 0; i < this.size(); i++) {
             label_i = this.getLabel(i);
-            equal = 1;
             for (int j = 0; j < u.size(); j++) {
                 equal = label_i.compareToIgnoreCase(u.getLabel(j)); // 0 if equals
                 if(equal==0) return true;
@@ -355,7 +355,7 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
                 dist = dist==null ? op_init.apply(dist_ij) : op_aggregation.apply(dist,dist_ij);
             }
         }
-        return dist;
+        return dist!=null ? dist : op_init.apply(0.0);  //If this descriptor has not labels, it is included in u 
     }
     
     /**
@@ -439,12 +439,12 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
          * The unary operator used to initialize the distance accumulator (as a
          * function of the fisrt distance).
          */
-        private UnaryOperator<Double> op_init;
+        private transient UnaryOperator<Double> op_init;  // Class non serializable 
         /**
          * The binary operator used to aggregate a new distance to the previous
          * ones.
          */
-        private BinaryOperator<Double> op_aggregation;
+        private transient BinaryOperator<Double> op_aggregation; // Class non serializable
 
         /**
          * Constructs a new comparator based on the given type of distance

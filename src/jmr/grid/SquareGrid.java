@@ -2,6 +2,7 @@ package jmr.grid;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
 /**
  * Class representing a grid formed by tiling the plane regularly with squares.
@@ -10,11 +11,11 @@ import java.awt.image.BufferedImage;
  * 
  * @author Jesús Chamorro Martínez (jesus@decsai.ugr.es)
  */
-public class SquareGrid<T extends BufferedImage> implements Grid<T>{
+public class SquareGrid<T extends BufferedImage> implements Grid<T>, Serializable{
     /**
      * The source image associated to this grid.
      */
-    private T source;
+    private transient T source;
     /**
      * The width of the grid, understood as the number of titles in the x-axis.
      */
