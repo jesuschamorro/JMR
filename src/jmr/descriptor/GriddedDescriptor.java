@@ -33,6 +33,11 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T> implements S
     private Class<? extends MediaDescriptor> tileDescriptorClass;
     
     /**
+     * Comparator used by default.
+     */
+    static private Comparator DEFAULT_COMPARATOR = new DefaultComparator();
+    
+    /**
      * Default grid size.
      */
     private static Dimension DEFAULT_GRID_SIZE = new Dimension(2, 2);
@@ -55,7 +60,7 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T> implements S
      * @param tileDescriptorClass the descriptor class for each tile
      */
     public GriddedDescriptor(Grid<T> grid, Class<? extends MediaDescriptor> tileDescriptorClass) {
-        super((T)grid.getSource(), new DefaultComparator());
+        super((T)grid.getSource(), DEFAULT_COMPARATOR);
         // The previous call does not initialize the tile descriptors. It will 
         // be done in the following setTilesDescriptors() call
         this.grid = grid;
@@ -221,6 +226,21 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T> implements S
             DEFAULT_TILE_DESCRIPTOR_CLASS = descriptorClass;
         }
     }
+    
+    
+    /**
+     * Set the default comparator for this class. This comparator is used when a
+     * specific one is not provided in the object construction.
+     *
+     * @param comparator the new comparator. If the given parameter is null, a
+     * {@link #DEFAULT_COMPARATOR} comparator is assigned.
+     */
+    static public void setDefaultComparator(Comparator comparator) {
+        DEFAULT_COMPARATOR = comparator != null ? comparator : new DefaultComparator();        
+        // No null comparator is allowed. If the given parameter is null, the 
+        // default one is used.
+    }
+    
     
     /**
      * Returns a string representation of this descriptor

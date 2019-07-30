@@ -247,6 +247,19 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
     }
     
     /**
+     * Set the default comparator for this class. This comparator is used when a
+     * specific one is not provided in the object construction.
+     *
+     * @param comparator the new comparator. If the given parameter is null, a
+     * {@link #DEFAULT_COMPARATOR} comparator is assigned.
+     */
+    static public void setDefaultComparator(Comparator comparator) {
+        DEFAULT_COMPARATOR = comparator != null ? comparator : new EqualComparator();        
+        // No null comparator is allowed. If the given parameter is null, the 
+        // default one is used.
+    }
+    
+    /**
      * Returns a string representation of this descriptor.
      * 
      * @return a string representation of this descriptor 
