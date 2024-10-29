@@ -149,7 +149,11 @@ import java.awt.image.BufferedImage;
 
         while(it.hasNext()){
             color = it.next();
-            output.setRGB(it.getX()-location.x, it.getY()-location.y, color.getRGB());   
+            output.setRGB(it.getX()-location.x, it.getY()-location.y, color.getRGB()); 
+            
+            int x = it.getX();//-location.x);
+            int y = it.getY();//-location.y;
+            System.out.println(x +", "+ y);
         }
         return output;
     }
