@@ -386,7 +386,7 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
      * Functional (inner) class implementing the equal comparator between label
      * descriptors. It returns 0.0 if the labels are the same in both
      * descriptors without repetitions (ignoring upper cases and position),
-     * Double.POSITIVE_INFINITY in other case.
+     * {@link java.lang.Double.POSITIVE_INFINITY} in other case.
      */
     static public class EqualComparator implements Comparator<LabelDescriptor, Double> {
         @Override
@@ -404,7 +404,7 @@ public class LabelDescriptor<T> extends MediaDescriptorAdapter<T> implements Ser
      * Functional (inner) class implementing the 'soft' equal comparator between
      * label descriptors. It returns 0.0 if the labels of one descriptor are
      * included in the other, or viceversa (ignoring upper cases and position),
-     * Double.POSITIVE_INFINITY in other case.
+     * {@link java.lang.Double.POSITIVE_INFINITY} in other case.
      */
     static public class SoftEqualComparator implements Comparator<LabelDescriptor, Double> {
         @Override

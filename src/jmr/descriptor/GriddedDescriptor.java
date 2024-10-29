@@ -88,7 +88,7 @@ public class GriddedDescriptor<T> extends MediaDescriptorAdapter<T> implements S
      * Constructs a new grid descriptor for the particular case of an image (as
      * media) with a square grid using the default grid size
      * {@link #DEFAULT_GRID_SIZE} and the default descriptor class for each tile
-     * {@link #DEFAULT_TILE_DESCRIPTOR_CLASS}.
+     * {@link #DEFAULT_CLASS_TILE_DESCRIPTOR}.
      *
      * @param image the source image associated to this descriptor.
      */
